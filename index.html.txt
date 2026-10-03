@@ -1,0 +1,2210 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منصة أبطال المستقبل | المعلم الخبير وبنك بلوم الذكي</title>
+  
+  <!-- External Libraries -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
+            kid: { blue: '#3b82f6', yellow: '#fbbf24', pink: '#ec4899', green: '#10b981', purple: '#8b5cf6', orange: '#f97316' },
+            brand: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 900: '#312e81' },
+            bloom: {
+              remember: '#3b82f6',
+              understand: '#06b6d4',
+              apply: '#10b981',
+              analyze: '#f59e0b',
+              evaluate: '#ec4899',
+              create: '#8b5cf6'
+            }
+          },
+          fontFamily: {
+            sans: ['Cairo', 'Tajawal', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { 
+      font-family: 'Cairo', sans-serif; 
+      background-color: #f8fafc;
+      background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23e2e8f0" fill-opacity="0.5"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 9px; height: 9px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #fbbf24; border-radius: 9999px; border: 2px solid #f8fafc; }
+    ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+
+    /* Animations */
+    .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+    .slide-up { animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+    .bounce-hover:hover { transform: translateY(-4px) scale(1.01); transition: all 0.25s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Confetti Canvas */
+    #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+
+    /* Loading Spinner */
+    .loader { 
+      border: 5px solid #f3f3f3; 
+      border-top: 5px solid #fbbf24; 
+      border-right: 5px solid #ec4899;
+      border-bottom: 5px solid #3b82f6;
+      border-left: 5px solid #10b981;
+      border-radius: 50%; width: 46px; height: 46px; animation: spin 1s linear infinite; 
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    .kid-card {
+      background: white;
+      border-radius: 24px;
+      border-bottom: 6px solid #e2e8f0;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Print View */
+    @media print {
+      .no-print { display: none !important; }
+      .print-only { display: block !important; }
+      body { background: white !important; color: black !important; }
+      .page-break { page-break-after: always; }
+    }
+    .print-only { display: none; }
+  </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col selection:bg-brand-600 selection:text-white">
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Global Toast Container -->
+  <div id="toast-container" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 flex flex-col gap-3 w-full max-w-md px-4 pointer-events-none"></div>
+
+  <!-- Main Header -->
+  <header class="bg-gradient-to-r from-kid-blue via-brand-700 to-kid-purple text-white shadow-xl sticky top-0 z-40 border-b-4 border-white/20 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex justify-between items-center">
+      
+      <!-- Brand Logo & Title -->
+      <div class="flex items-center gap-3">
+        <div class="bg-white text-kid-purple p-2.5 rounded-2xl shadow-md transform rotate-2">
+          <i class="fa-solid fa-graduation-cap text-2xl"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl sm:text-2xl font-black tracking-wide drop-shadow-sm">منصة أبطال المستقبل التربوية</h1>
+            <span class="text-[11px] bg-white/20 text-white font-black px-2.5 py-0.5 rounded-full border border-white/30 backdrop-blur-sm hidden sm:inline-block">
+              + بنك أسئلة بلوم
+            </span>
+          </div>
+          <p class="text-xs text-blue-100 hidden md:block">منظومة التعلم الذكي، تحديات الأبطال، وبنك الأسئلة التحليلي وفق هرم بلوم</p>
+        </div>
+      </div>
+
+      <!-- User Info & Controls -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button id="toggleApiKeyModalBtn" class="text-xs font-bold px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition flex items-center gap-1.5" title="إعدادات الذكاء الاصطناعي">
+          <i class="fa-solid fa-brain text-amber-300"></i>
+          <span class="hidden lg:inline">الذكاء الاصطناعي</span>
+        </button>
+
+        <div id="user-info" class="hidden items-center gap-2 sm:gap-3">
+          <span id="user-badge" class="bg-white/20 px-3.5 py-1.5 rounded-full text-xs font-extrabold border-2 border-white/30 backdrop-blur-sm flex items-center gap-1.5"></span>
+          <button onclick="logout()" class="text-xs bg-red-500 hover:bg-red-600 border-b-4 border-red-700 px-3.5 py-1.5 rounded-xl transition font-black flex items-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-door-open"></i> <span class="hidden sm:inline">خروج</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div id="app-nav" class="hidden bg-black/15 backdrop-blur-md border-t border-white/15 shadow-inner">
+      <div class="max-w-7xl mx-auto px-4 flex gap-1.5 sm:gap-2 overflow-x-auto py-2">
+        
+        <!-- Tab: Materials -->
+        <button onclick="switchTab('materials')" id="tab-materials" class="nav-btn px-4 sm:px-5 py-2 font-black rounded-xl text-xs sm:text-sm bg-white text-kid-purple shadow-sm transition border border-white flex items-center gap-2 shrink-0">
+          <i class="fa-solid fa-shapes text-amber-500"></i>
+          <span>مكتبة الدروس الممتعة</span>
+        </button>
+
+        <!-- Tab: Quizzes -->
+        <button onclick="switchTab('quizzes')" id="tab-quizzes" class="nav-btn px-4 sm:px-5 py-2 font-black rounded-xl text-xs sm:text-sm text-white hover:bg-white/20 transition border border-transparent flex items-center gap-2 shrink-0">
+          <i class="fa-solid fa-star text-yellow-300"></i>
+          <span>تحديات الأبطال</span>
+        </button>
+
+        <!-- Tab: Bloom PDF Question Bank -->
+        <button onclick="switchTab('bloom')" id="tab-bloom" class="nav-btn px-4 sm:px-5 py-2 font-black rounded-xl text-xs sm:text-sm text-white hover:bg-white/20 transition border border-transparent flex items-center gap-2 shrink-0">
+          <i class="fa-solid fa-file-pdf text-rose-300"></i>
+          <span>بنك أسئلة بلوم (PDF)</span>
+          <span id="bloomBadgeNav" class="bg-yellow-400 text-slate-900 text-[10px] font-black px-1.5 py-0.5 rounded-full hidden">0</span>
+        </button>
+
+        <!-- Tab: Printable Exam Sheet -->
+        <button onclick="switchTab('bank')" id="tab-bank" class="nav-btn px-4 sm:px-5 py-2 font-black rounded-xl text-xs sm:text-sm text-white hover:bg-white/20 transition border border-transparent flex items-center gap-2 shrink-0">
+          <i class="fa-solid fa-print text-emerald-300"></i>
+          <span>طباعة ورقة الامتحان</span>
+        </button>
+
+        <!-- Tab: Teacher Reports -->
+        <button onclick="switchTab('submissions')" id="tab-submissions" class="nav-btn hidden px-4 sm:px-5 py-2 font-black rounded-xl text-xs sm:text-sm text-white hover:bg-white/20 transition border border-transparent flex items-center gap-2 shrink-0">
+          <i class="fa-solid fa-chart-pie text-cyan-300"></i>
+          <span>تقارير المعلم والنتائج</span>
+        </button>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full relative">
+    
+    <!-- Global Loader -->
+    <div id="global-loader" class="absolute inset-0 z-30 bg-slate-50/90 flex flex-col items-center justify-center pt-24 min-h-[500px]">
+      <div class="loader mb-4"></div>
+      <p class="text-brand-700 font-black text-xl animate-pulse">جاري تجهيز المنظومة التعليمية الذكية...</p>
+    </div>
+
+    <!-- AUTH SECTION -->
+    <section id="auth-section" class="hidden max-w-md mx-auto kid-card p-8 slide-up mt-8 border-b-8 border-brand-600">
+      <div class="text-center mb-6">
+        <div class="w-20 h-20 bg-indigo-50 text-brand-600 rounded-3xl flex items-center justify-center mx-auto mb-3 text-4xl shadow-inner">
+          <i class="fa-solid fa-user-astronaut"></i>
+        </div>
+        <h2 class="text-2xl font-black text-slate-800 mb-1">أهلاً بك في المنظومة التعليمية</h2>
+        <p class="text-xs text-slate-500 font-bold">حدد هويتك للانطلاق في مغامرة التعلم</p>
+      </div>
+
+      <div class="flex gap-2.5 mb-6 bg-slate-100 p-1.5 rounded-2xl">
+        <button onclick="toggleAuthType('student')" id="auth-type-student" class="flex-1 py-3 rounded-xl font-black text-xs sm:text-sm bg-kid-yellow text-white shadow-md border-b-4 border-yellow-600 transition transform scale-105">
+          طالب بطل 🦸‍♂️
+        </button>
+        <button onclick="toggleAuthType('teacher')" id="auth-type-teacher" class="flex-1 py-3 rounded-xl font-bold text-xs sm:text-sm text-slate-600 hover:bg-slate-200 transition">
+          المعلم الخبير 👨‍🏫
+        </button>
+      </div>
+
+      <form id="login-form" onsubmit="handleLogin(event)">
+        <div id="student-inputs">
+          <div class="mb-5">
+            <label class="block text-slate-700 font-black mb-2 text-sm">ما هو اسمك يا بطل؟</label>
+            <input type="text" id="student-name" class="w-full px-4 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-2xl focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none text-base font-bold text-center" placeholder="اكتب اسمك الثلاثي...">
+          </div>
+        </div>
+
+        <div id="teacher-inputs" class="hidden">
+          <div class="mb-5">
+            <label class="block text-slate-700 font-black mb-2 text-sm">الرمز السري للمعلم</label>
+            <input type="password" id="teacher-pass" class="w-full px-4 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-2xl focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none text-center font-bold" placeholder="الرمز الافتراضي (1234)">
+            <p class="text-[11px] text-slate-400 mt-1 text-center">الرمز الافتراضي للتجربة هو: 1234</p>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-kid-green hover:bg-emerald-600 text-white font-black text-lg py-3.5 rounded-2xl border-b-4 border-emerald-700 transition shadow-md hover:-translate-y-0.5 active:scale-[0.99]">
+          هيا بنا ننطلق! 🚀
+        </button>
+      </form>
+    </section>
+
+    <!-- SECTION 1: MATERIALS LIBRARY -->
+    <section id="materials-section" class="hidden fade-in space-y-6">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 kid-card p-6 border-b-4 border-kid-pink">
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 bg-pink-100 text-kid-pink rounded-2xl flex items-center justify-center text-2xl shadow-sm">
+            <i class="fa-solid fa-book-sparkles"></i>
+          </div>
+          <div>
+            <h2 class="text-2xl font-black text-slate-800">مكتبة الدروس الممتعة</h2>
+            <p class="text-xs text-slate-500 font-bold mt-0.5">فيديوهات، ملفات PDF، كتب تفاعلية، وعروض تعليمية مشوقة</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button id="btn-add-material" onclick="openModal('add-material-modal')" class="hidden bg-kid-purple hover:bg-purple-600 text-white px-5 py-2.5 rounded-2xl font-black text-xs sm:text-sm border-b-4 border-purple-800 transition shadow-md hover:-translate-y-0.5 flex items-center gap-1.5">
+            <i class="fa-solid fa-plus"></i> إضافة درس جديد
+          </button>
+        </div>
+      </div>
+
+      <div id="materials-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <div id="empty-materials" class="hidden text-center py-16 kid-card border-b-4 border-slate-300">
+        <div class="text-slate-300 mb-3 animate-bounce"><i class="fa-solid fa-box-open text-6xl"></i></div>
+        <p class="text-slate-500 font-black text-base">المكتبة فارغة حالياً. بإمكان المعلم إضافة أول درس مشوق!</p>
+      </div>
+    </section>
+
+    <!-- SECTION 2: QUIZZES (HERO CHALLENGES) -->
+    <section id="quizzes-section" class="hidden fade-in space-y-6">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 kid-card p-6 border-b-4 border-kid-yellow">
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 bg-yellow-100 text-yellow-600 rounded-2xl flex items-center justify-center text-2xl shadow-sm">
+            <i class="fa-solid fa-trophy"></i>
+          </div>
+          <div>
+            <h2 class="text-2xl font-black text-slate-800">تحديات الأبطال</h2>
+            <p class="text-xs text-slate-500 font-bold mt-0.5">حل التحديات التفاعلية، اجمع النقاط، واكتشف مدى ذكائك!</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button id="btn-add-quiz" onclick="openModal('add-quiz-modal')" class="hidden bg-kid-yellow hover:bg-yellow-500 text-white px-5 py-2.5 rounded-2xl font-black text-xs sm:text-sm border-b-4 border-yellow-600 transition shadow-md hover:-translate-y-0.5 flex items-center gap-1.5">
+            <i class="fa-solid fa-plus"></i> إنشاء تحدي أبطال جديد
+          </button>
+        </div>
+      </div>
+
+      <div id="quizzes-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <div id="empty-quizzes" class="hidden text-center py-16 kid-card border-b-4 border-slate-300">
+        <div class="text-slate-300 mb-3 animate-bounce"><i class="fa-solid fa-ghost text-6xl"></i></div>
+        <p class="text-slate-500 font-black text-base">لا توجد تحديات حالياً. استرح يا بطل أو جرب أسئلة بلوم!</p>
+      </div>
+    </section>
+
+    <!-- SECTION 3: BLOOM QUESTION BANK & PDF ENGINE -->
+    <section id="bloom-section" class="hidden fade-in space-y-8">
+      
+      <!-- Top Sub-Tabs within Bloom: PDF Creator vs Interactive Session -->
+      <div class="bg-white p-2 rounded-2xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <button onclick="toggleBloomSubMode('config')" id="subtab-config-btn" class="px-4 py-2 rounded-xl text-xs font-black transition bg-brand-600 text-white shadow-sm flex items-center gap-2">
+            <i class="fa-solid fa-sliders"></i>
+            <span>1. تخصيص المحتوى والمصفوفة</span>
+          </button>
+          <button onclick="toggleBloomSubMode('interactive')" id="subtab-interactive-btn" class="px-4 py-2 rounded-xl text-xs font-black transition text-slate-600 hover:bg-slate-100 flex items-center gap-2">
+            <i class="fa-solid fa-brain"></i>
+            <span>2. التقويم التفاعلي بمهارات بلوم</span>
+            <span id="bloomCountBadge" class="bg-brand-100 text-brand-800 text-[10px] px-2 py-0.5 rounded-full font-black hidden">0</span>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="convertBloomToHeroChallenge()" class="px-3.5 py-2 rounded-xl text-xs font-black bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 transition flex items-center gap-1.5" title="تحويل الأسئلة الحالية لتحدي في قسم الأبطال">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-600"></i>
+            <span>تحويل الأسئلة لتحدي أبطال</span>
+          </button>
+          <button onclick="loadSampleLesson()" class="px-3.5 py-2 rounded-xl text-xs font-black bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 transition flex items-center gap-1.5">
+            <i class="fa-solid fa-book-open"></i>
+            <span>تجربة نموذج دراسي</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- SUB-MODE A: CONFIGURATION & UPLOAD -->
+      <div id="bloom-config-mode" class="block">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          <!-- PDF Extraction Side -->
+          <div class="lg:col-span-7 space-y-6">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2">
+                  <span class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">أ</span>
+                  <h2 class="text-base sm:text-lg font-black text-slate-900">مصدر المحتوى التعليمي (PDF أو نص)</h2>
+                </div>
+                <span id="charCountLabel" class="text-xs font-bold text-slate-400">0 حرف مُستخرج</span>
+              </div>
+
+              <!-- Drag & Drop Zone with 100% Reliable Native File Input -->
+              <div id="dropZone" class="border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-2xl p-6 text-center transition bg-slate-50/50 hover:bg-indigo-50/30 group relative overflow-hidden">
+                <input 
+                  type="file" 
+                  id="pdfFileInput" 
+                  accept=".pdf,application/pdf,text/plain" 
+                  title="انقر لاختيار ملف PDF"
+                  class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
+                >
+
+                <div id="uploadIdleState" class="relative z-10 pointer-events-none">
+                  <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-white shadow-sm flex items-center justify-center text-slate-400 group-hover:text-brand-600 group-hover:scale-110 transition duration-300 border border-slate-100">
+                    <i class="fa-solid fa-file-arrow-up text-3xl"></i>
+                  </div>
+                  <h3 class="text-sm font-black text-slate-800 mb-1">انقر لاختيار ملف PDF أو اسحبه وأفلته هنا</h3>
+                  <p class="text-xs text-slate-500 mb-3">نقوم بقراءة واستخراج النصوص بأمان كامل داخل متصفحك دون رفع المستند لخوادم خارجية</p>
+                  <div class="flex items-center justify-center gap-2">
+                    <span class="px-4 py-2 rounded-xl bg-brand-600 text-white text-xs font-bold shadow-md shadow-brand-500/20 group-hover:bg-brand-700 transition inline-flex items-center gap-1.5">
+                      <i class="fa-regular fa-folder-open"></i> استعراض الملفات من جهازك
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs bg-slate-200/60 text-slate-700 font-semibold">
+                      <i class="fa-solid fa-shield-halved text-emerald-600"></i> معالجة داخلية 100%
+                    </span>
+                  </div>
+                </div>
+
+                <div id="uploadProcessingState" class="hidden py-4 relative z-30">
+                  <div class="w-12 h-12 mx-auto mb-3 border-4 border-brand-200 border-t-brand-600 rounded-full animate-spin"></div>
+                  <h4 id="uploadStatusText" class="text-xs font-black text-slate-800 mb-1">جارٍ قراءة واستخراج نصوص الـ PDF...</h4>
+                  <div class="w-48 bg-slate-200 rounded-full h-2 mx-auto mt-2 overflow-hidden">
+                    <div id="uploadProgressBar" class="bg-brand-600 h-2 rounded-full transition-all duration-300" style="width: 15%"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Extracted Text Area -->
+              <div class="mt-4">
+                <div class="flex items-center justify-between mb-2">
+                  <label for="extractedText" class="text-xs font-bold text-slate-700">النص المستخرج للتحليل وصياغة الأسئلة:</label>
+                  <div class="flex items-center gap-2">
+                    <button onclick="pasteFromClipboard()" class="text-xs text-brand-600 hover:underline flex items-center gap-1">
+                      <i class="fa-regular fa-paste"></i> لصق من الحافظة
+                    </button>
+                    <span class="text-slate-300">|</span>
+                    <button onclick="clearTextContent()" class="text-xs text-red-500 hover:underline">مسح</button>
+                  </div>
+                </div>
+                <textarea id="extractedText" rows="9" class="w-full text-xs sm:text-sm leading-relaxed p-4 rounded-xl border border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none resize-y text-slate-700 bg-slate-50/40" placeholder="أرفق ملف PDF أو الصق هنا محتوى الدرس الذي ترغب في توليد بنك أسئلة تحليلي له..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Question Types Matrix -->
+          <div class="lg:col-span-5 space-y-6">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm sticky top-28">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-sm">ب</span>
+                <h2 class="text-base sm:text-lg font-black text-slate-900">مصفوفة مهارات بلوم السبعة</h2>
+              </div>
+              
+              <p class="text-xs text-slate-500 mb-4 leading-relaxed font-semibold">
+                حدد عدد الأسئلة المطلوبة لكل مهارة؛ يتم صياغة الأسئلة لاستهداف التحليل، الاستنتاج، المقارنة، والتقويم:
+              </p>
+
+              <!-- Seven Bloom Question Checkboxes -->
+              <div class="space-y-2.5 max-h-[350px] overflow-y-auto pr-1">
+                <!-- 1 -->
+                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200 hover:bg-slate-100 transition">
+                  <label class="flex items-center gap-3 cursor-pointer select-none">
+                    <input type="checkbox" id="type-truefalse" checked class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500">
+                    <div>
+                      <div class="text-xs font-black text-slate-800">صح أو خطأ (مع التصويب والتعليل)</div>
+                      <div class="text-[11px] text-slate-400">تقييم الدقة العلمية والربط</div>
+                    </div>
+                  </label>
+                  <input type="number" id="count-truefalse" value="2" min="1" max="10" class="w-12 text-center text-xs font-bold py-1 bg-white border border-slate-200 rounded-lg">
+                </div>
+
+                <!-- 2 -->
+                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200 hover:bg-slate-100 transition">
+                  <label class="flex items-center gap-3 cursor-pointer select-none">
+                    <input type="checkbox" id="type-complete" checked class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500">
+                    <div>
+                      <div class="text-xs font-black text-slate-800">أكمل العبارات (فهم وتكامل تركيبي)</div>
+                      <div class="text-[11px] text-slate-400">ربط العلاقات المتبادلة في المفهوم</div>
+                    </div>
+                  </label>
+                  <input type="number" id="count-complete" value="2" min="1" max="10" class="w-12 text-center text-xs font-bold py-1 bg-white border border-slate-200 rounded-lg">
+                </div>
+
+                <!-- 3 -->
+                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200 hover:bg-slate-100 transition">
+                  <label class="flex items-center gap-3 cursor-pointer select-none">
+                    <input type="checkbox" id="type-explain" checked class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500">
+                    <div>
+                      <div class="text-xs font-black text-slate-800">بم تفسر / علل (تحليل واستنتاج)</div>
+                      <div class="text-[11px] text-slate-400">استقصاء الأسباب والعلل الجوهرية</div>
+                    </div>
+                  </label>
+                  <input type="number" id="count-explain" value="2" min="1" max="10" class="w-12 text-center text-xs font-bold py-1 bg-white border border-slate-200 rounded-lg">
+                </div>
+
+                <!-- 4 -->
+                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200 hover:bg-slate-100 transition">
+                  <label class="flex items-center gap-3 cursor-pointer select-none">
+                    <input type="checkbox" id="type-results" checked class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500">
+                    <div>
+                      <div class="text-xs font-black text-slate-800">ما النتائج المترتبة على...؟</div>
+                      <div class="text-[11px] text-slate-400">تفكير ناقد وربط الآثار اللاحقة</div>
+                    </div>
+                  </label>
+                  <input type="number" id="count-results" value="2" min="1" max="10" class="w-12 text-center text-xs font-bold py-1 bg-white border border-slate-200 rounded-lg">
+                </div>
+
+                <!-- 5 -->
+                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200 hover:bg-slate-100 transition">
+                  <label class="flex items-center gap-3 cursor-pointer select-none">
+                    <input type="checkbox" id="type-prove" checked class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500">
+                    <div>
+                      <div class="text-xs font-black text-slate-800">دلل تاريخياً / جغرافياً / علمياً</div>
+                      <div class="text-[11px] text-slate-400">تقديم البراهين والشواهد المنطقية</div>
+                    </div>
+                  </label>
+                  <input type="number" id="count-prove" value="2" min="1" max="10" class="w-12 text-center text-xs font-bold py-1 bg-white border border-slate-200 rounded-lg">
+                </div>
+
+                <!-- 6 -->
+                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200 hover:bg-slate-100 transition">
+                  <label class="flex items-center gap-3 cursor-pointer select-none">
+                    <input type="checkbox" id="type-terms" checked class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500">
+                    <div>
+                      <div class="text-xs font-black text-slate-800">اكتب ما تشير إليه العبارات</div>
+                      <div class="text-[11px] text-slate-400">مفاهيم مركبة وتطبيقات سياقية</div>
+                    </div>
+                  </label>
+                  <input type="number" id="count-terms" value="2" min="1" max="10" class="w-12 text-center text-xs font-bold py-1 bg-white border border-slate-200 rounded-lg">
+                </div>
+
+                <!-- 7 -->
+                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200 hover:bg-slate-100 transition">
+                  <label class="flex items-center gap-3 cursor-pointer select-none">
+                    <input type="checkbox" id="type-definitions" checked class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500">
+                    <div>
+                      <div class="text-xs font-black text-slate-800">ما المقصود بـ...؟</div>
+                      <div class="text-[11px] text-slate-400">صياغة المفاهيم بأسلوب الفهم الذاتي</div>
+                    </div>
+                  </label>
+                  <input type="number" id="count-definitions" value="2" min="1" max="10" class="w-12 text-center text-xs font-bold py-1 bg-white border border-slate-200 rounded-lg">
+                </div>
+              </div>
+
+              <!-- Action Generation Button -->
+              <div class="pt-4 border-t border-slate-100 mt-4">
+                <button id="generateQuestionsBtn" onclick="initiateQuestionGeneration()" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-black text-base shadow-xl shadow-brand-500/25 transition flex items-center justify-center gap-2.5 active:scale-[0.99]">
+                  <i class="fa-solid fa-bolt-lightning text-amber-300 text-lg"></i>
+                  <span>توليد بنك الأسئلة وفق معايير بلوم</span>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- SUB-MODE B: INTERACTIVE CLASS SESSION -->
+      <div id="bloom-interactive-mode" class="hidden space-y-6">
+        
+        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+              <h2 class="text-base sm:text-lg font-black text-slate-900">جلسة التفاعل الصفي والتقويم الذاتي (بلوم)</h2>
+            </div>
+            <p class="text-xs text-slate-500">أجب أولاً بأسلوبك لاختبار مستوى فهمك، ثم اكشف الإجابة النموذجية وتوجيه المعلم الخبير</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2.5">
+            <select id="filterTypeSelect" onchange="renderQuestionsView()" class="text-xs font-bold bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 outline-none">
+              <option value="all">كل أنواع الأسئلة</option>
+              <option value="truefalse">صح أو خطأ</option>
+              <option value="complete">أكمل العبارات</option>
+              <option value="explain">بم تفسر / علل</option>
+              <option value="results">ما النتائج المترتبة</option>
+              <option value="prove">دلل على صحة العبارة</option>
+              <option value="terms">اكتب ما تشير إليه</option>
+              <option value="definitions">ما المقصود بـ</option>
+            </select>
+
+            <button onclick="revealAllAnswers()" class="text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1.5">
+              <i class="fa-regular fa-eye"></i>
+              <span>كشف كل الإجابات</span>
+            </button>
+
+            <button onclick="generateFreshBatch()" class="text-xs font-black px-3.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 transition flex items-center gap-1.5">
+              <i class="fa-solid fa-arrows-rotate"></i>
+              <span>دفعة جديدة غير مكررة</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="quizEmptyState" class="bg-white rounded-3xl p-12 text-center border border-slate-200 max-w-xl mx-auto my-8">
+          <div class="w-20 h-20 mx-auto rounded-3xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-3xl mb-4">
+            <i class="fa-solid fa-lightbulb"></i>
+          </div>
+          <h3 class="text-lg font-black text-slate-900 mb-2">لم يتم توليد أسئلة بلوم بعد</h3>
+          <p class="text-xs sm:text-sm text-slate-500 mb-6">يرجى الانتقال للتبويب الأول وإرفاق ملف PDF أو تجربة النموذج الدراسي لتوليد بنك الأسئلة فوراً.</p>
+          <button onclick="loadSampleLesson()" class="px-6 py-3 rounded-xl bg-brand-600 text-white font-black text-xs sm:text-sm hover:bg-brand-700 transition shadow-lg shadow-brand-500/20 inline-flex items-center gap-2">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>تجربة نموذج دراسي الآن</span>
+          </button>
+        </div>
+
+        <div id="questionsContainer" class="space-y-6">
+          <!-- Injected via JavaScript -->
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- SECTION 4: PRINTABLE EXAM PAPER -->
+    <section id="bank-section" class="hidden fade-in space-y-6">
+      
+      <div class="no-print bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-black text-slate-900">ورقة الاختبار وبنك الأسئلة المجهزة للطباعة</h2>
+          <p class="text-xs text-slate-500">تنسيق امتحاني رسمي معتمد يتضمن ورقة الأسئلة ودليل المعلم للإجابات النموذجية</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button onclick="toggleAnswerKeyInPrint()" id="togglePrintAnswersBtn" class="text-xs font-bold px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-2">
+            <i class="fa-solid fa-check-double text-indigo-600"></i>
+            <span id="printAnswersBtnText">إدراج نموذج الإجابة: نعم</span>
+          </button>
+          <button onclick="window.print()" class="text-xs font-black px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white shadow-md shadow-brand-500/20 transition flex items-center gap-2">
+            <i class="fa-solid fa-print"></i>
+            <span>طباعة الورقة / PDF</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-300 p-8 sm:p-12 shadow-sm max-w-4xl mx-auto print:border-none print:shadow-none print:p-0">
+        
+        <div class="border-b-2 border-slate-900 pb-6 mb-6 flex justify-between items-center text-center">
+          <div class="text-right text-xs text-slate-600 font-bold space-y-1">
+            <p>وزارة التربية والتعليم</p>
+            <p>قطاع التعليم العام - التوجيه الفني</p>
+            <p class="text-indigo-700">تقييم مهارات التفكير العليا (بلوم)</p>
+          </div>
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900">ورقة عمل تقويمية وبنك أسئلة تحليلي</h2>
+            <p id="examTopicName" class="text-xs sm:text-sm font-black text-indigo-700 mt-1">موضوع الدرس: تحليل المحتوى المرفق</p>
+          </div>
+          <div class="text-left text-xs text-slate-600 font-bold space-y-1">
+            <p>اسم الطالب: ...........................</p>
+            <p>الفصل / الشعبة: .....................</p>
+            <p>الزمن المقترح: 45 دقيقة</p>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-700 mb-8 leading-relaxed font-semibold">
+          <span class="font-black text-slate-900">توجيهات تربوية للطالب:</span>
+          تعتمد هذه الأسئلة على الفهم العميق والربط المنطقي والتحليل. أجب بأسلوبك العلمي الدقيق مع تدعيم إجاباتك بالشواهد والتعليلات المناسبة.
+        </div>
+
+        <div id="printQuestionsList" class="space-y-8">
+          <!-- Populated by JS -->
+        </div>
+
+        <div id="printAnswerKeySection" class="mt-12 pt-8 border-t-2 border-dashed border-slate-400 page-break">
+          <div class="text-center mb-6">
+            <h3 class="text-lg font-black text-slate-900">دليل المعلم والنموذج الإرشادي للإجابات والتعليلات</h3>
+            <p class="text-xs text-slate-500">مصفوفة الإجابة النموذجية ومستوى بلوم المقاس لكل مهارة</p>
+          </div>
+          <div id="printAnswersList" class="space-y-4 text-sm">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- SECTION 5: TEACHER SUBMISSIONS REPORTS -->
+    <section id="submissions-section" class="hidden fade-in space-y-6">
+      <div class="kid-card p-6 border-b-4 border-kid-blue mb-6">
+        <h2 class="text-xl sm:text-2xl font-black text-slate-800 mb-4 flex items-center gap-3">
+          <i class="fa-solid fa-chart-simple text-kid-blue text-2xl sm:text-3xl"></i>
+          <span>تقارير إجابات الطلاب (خاص بالمعلم)</span>
+        </h2>
+        <div class="flex flex-col md:flex-row gap-4">
+          <div class="flex-1">
+            <label class="block text-xs font-black text-slate-700 mb-2">اختر التحدي لعرض النتائج:</label>
+            <select id="report-quiz-select" onchange="loadSubmissionsForQuiz()" class="w-full p-3.5 bg-slate-50 border-2 border-slate-200 rounded-2xl font-bold text-xs sm:text-sm focus:border-kid-blue outline-none">
+              <option value="">-- اختر التحدي --</option>
+            </select>
+          </div>
+          <div class="flex items-end">
+            <button onclick="loadSubmissionsForQuiz()" class="bg-kid-blue hover:bg-blue-600 text-white px-6 py-3.5 rounded-2xl font-black text-xs sm:text-sm border-b-4 border-blue-700 transition flex items-center gap-2">
+              <i class="fa-solid fa-rotate-right"></i> <span>تحديث</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="submissions-list" class="space-y-4">
+        <div class="text-center text-slate-400 py-10 font-bold bg-white rounded-2xl border-2 border-dashed border-slate-200 text-sm">
+          يرجى اختيار تحدي من القائمة أعلاه لمعاينة تفاعل ونتائج الأبطال.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: Add Material -->
+  <div id="add-material-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 fade-in">
+    <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-lg p-6 sm:p-8 relative border-b-8 border-kid-purple">
+      <button onclick="closeModal('add-material-modal')" class="absolute top-5 left-5 w-9 h-9 bg-slate-100 rounded-full text-slate-500 hover:bg-red-100 hover:text-red-500 flex items-center justify-center transition">
+        <i class="fa-solid fa-times"></i>
+      </button>
+      <h3 class="text-xl font-black text-kid-purple mb-5 flex items-center gap-2">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> إضافة درس جديد
+      </h3>
+      
+      <form onsubmit="submitMaterial(event)">
+        <div class="mb-4">
+          <label class="block text-slate-700 font-black mb-1.5 text-xs">عنوان الدرس (بشكل مشوق)</label>
+          <input type="text" id="mat-title" required class="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-kid-purple outline-none font-bold text-xs sm:text-sm" placeholder="مثال: رحلة في الفضاء والمجموعات الشمسية 🚀">
+        </div>
+        
+        <div class="mb-4">
+          <label class="block text-slate-700 font-black mb-2 text-xs">نوع الدرس</label>
+          <div class="grid grid-cols-2 gap-2.5">
+            <label class="flex flex-col items-center justify-center gap-1.5 p-3 border-2 border-slate-200 rounded-xl cursor-pointer hover:bg-blue-50 transition bg-white text-center">
+              <input type="radio" name="mat-type" value="video" checked class="hidden peer">
+              <i class="fa-solid fa-circle-play text-2xl text-kid-blue"></i>
+              <span class="font-bold text-xs text-slate-700">فيديو ممتع</span>
+            </label>
+            <label class="flex flex-col items-center justify-center gap-1.5 p-3 border-2 border-slate-200 rounded-xl cursor-pointer hover:bg-green-50 transition bg-white text-center">
+              <input type="radio" name="mat-type" value="ibook" class="hidden peer">
+              <i class="fa-solid fa-book-open-reader text-2xl text-kid-green"></i>
+              <span class="font-bold text-xs text-slate-700">كتاب تفاعلي</span>
+            </label>
+            <label class="flex flex-col items-center justify-center gap-1.5 p-3 border-2 border-slate-200 rounded-xl cursor-pointer hover:bg-red-50 transition bg-white text-center">
+              <input type="radio" name="mat-type" value="pdf" class="hidden peer">
+              <i class="fa-solid fa-file-pdf text-2xl text-rose-500"></i>
+              <span class="font-bold text-xs text-slate-700">ملف قراءة (PDF)</span>
+            </label>
+            <label class="flex flex-col items-center justify-center gap-1.5 p-3 border-2 border-slate-200 rounded-xl cursor-pointer hover:bg-orange-50 transition bg-white text-center">
+              <input type="radio" name="mat-type" value="ppt" class="hidden peer">
+              <i class="fa-solid fa-file-powerpoint text-2xl text-amber-500"></i>
+              <span class="font-bold text-xs text-slate-700">عرض (شرائح)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <label class="block text-slate-700 font-black mb-1.5 text-xs">رابط الدرس (يوتيوب، درايف، ووردوول، الخ)</label>
+          <input type="url" id="mat-link" required dir="ltr" class="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-kid-purple outline-none text-left font-bold text-xs sm:text-sm" placeholder="https://...">
+        </div>
+        
+        <button type="submit" id="btn-submit-mat" class="w-full bg-kid-purple hover:bg-purple-600 text-white font-black text-base py-3.5 rounded-2xl border-b-4 border-purple-800 transition">
+          رفع الدرس للمكتبة! ✨
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Add Quiz (Hero Challenge Creator) -->
+  <div id="add-quiz-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 fade-in">
+    <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col relative border-b-8 border-kid-yellow">
+      <button onclick="closeModal('add-quiz-modal')" class="absolute top-5 left-5 w-9 h-9 bg-slate-100 rounded-full text-slate-500 hover:bg-red-100 hover:text-red-500 flex items-center justify-center transition z-10">
+        <i class="fa-solid fa-times"></i>
+      </button>
+      <div class="p-6 border-b-2 border-slate-100 bg-yellow-50 rounded-t-[2rem]">
+        <h3 class="text-xl font-black text-yellow-700 flex items-center gap-2">
+          <i class="fa-solid fa-medal"></i> إنشاء تحدي أبطال جديد
+        </h3>
+      </div>
+      
+      <div class="p-6 overflow-y-auto flex-grow bg-white" id="quiz-creator-body">
+        <div class="mb-6">
+          <label class="block font-black mb-1.5 text-slate-700 text-xs sm:text-sm">اسم التحدي (مثال: تحدي العلوم الخارق 🦸‍♂️)</label>
+          <input type="text" id="quiz-title" class="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-kid-yellow outline-none font-bold text-sm">
+        </div>
+        
+        <div class="mb-4 flex justify-between items-center border-b-2 border-dashed border-slate-200 pb-3">
+          <h4 class="font-black text-base text-kid-blue">الأسئلة الجاهزة (<span id="q-count" class="bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded-full">0</span>)</h4>
+        </div>
+        
+        <div id="questions-list-draft" class="space-y-4 mb-6">
+          <!-- Draft questions appear here -->
+        </div>
+
+        <div class="bg-blue-50/70 p-5 rounded-3xl border-2 border-blue-100">
+          <h5 class="font-black text-kid-blue mb-3 text-sm flex items-center gap-2">
+            <i class="fa-solid fa-puzzle-piece"></i> أضف سؤالاً جديداً
+          </h5>
+          <textarea id="draft-q-text" rows="2" class="w-full px-4 py-2.5 bg-white border-2 border-blue-200 rounded-xl focus:border-kid-blue outline-none mb-3 font-bold text-xs sm:text-sm" placeholder="اكتب السؤال هنا..."></textarea>
+          
+          <p class="text-xs font-bold text-slate-600 mb-2">اكتب الخيارات الأربعة وحدد الإجابة الصحيحة:</p>
+          <div class="space-y-2 mb-4" id="draft-options-container">
+            <div class="flex items-center gap-2 bg-white p-2 rounded-xl border border-slate-200">
+              <input type="radio" name="draft-correct" value="0" checked class="w-5 h-5 text-kid-blue accent-kid-blue cursor-pointer ml-1">
+              <input type="text" class="draft-opt w-full px-2 py-1 bg-transparent outline-none font-bold text-xs sm:text-sm text-slate-700" placeholder="الخيار الأول (أ)">
+            </div>
+            <div class="flex items-center gap-2 bg-white p-2 rounded-xl border border-slate-200">
+              <input type="radio" name="draft-correct" value="1" class="w-5 h-5 text-kid-blue accent-kid-blue cursor-pointer ml-1">
+              <input type="text" class="draft-opt w-full px-2 py-1 bg-transparent outline-none font-bold text-xs sm:text-sm text-slate-700" placeholder="الخيار الثاني (ب)">
+            </div>
+            <div class="flex items-center gap-2 bg-white p-2 rounded-xl border border-slate-200">
+              <input type="radio" name="draft-correct" value="2" class="w-5 h-5 text-kid-blue accent-kid-blue cursor-pointer ml-1">
+              <input type="text" class="draft-opt w-full px-2 py-1 bg-transparent outline-none font-bold text-xs sm:text-sm text-slate-700" placeholder="الخيار الثالث (ج)">
+            </div>
+            <div class="flex items-center gap-2 bg-white p-2 rounded-xl border border-slate-200">
+              <input type="radio" name="draft-correct" value="3" class="w-5 h-5 text-kid-blue accent-kid-blue cursor-pointer ml-1">
+              <input type="text" class="draft-opt w-full px-2 py-1 bg-transparent outline-none font-bold text-xs sm:text-sm text-slate-700" placeholder="الخيار الرابع (د)">
+            </div>
+          </div>
+          <button onclick="addDraftQuestion()" class="bg-white border-2 border-kid-blue text-kid-blue hover:bg-blue-100 hover:text-blue-700 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-black w-full transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-plus-circle"></i> حفظ السؤال في التحدي
+          </button>
+        </div>
+      </div>
+      
+      <div class="p-5 border-t-2 border-slate-100 bg-slate-50 rounded-b-[2rem]">
+        <button onclick="submitQuiz()" id="btn-submit-quiz" class="w-full bg-kid-yellow hover:bg-yellow-500 text-white font-black text-base py-3.5 rounded-2xl border-b-4 border-yellow-600 transition">
+          إطلاق التحدي للأبطال! 🚀
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Take Quiz (Student Play Mode) -->
+  <div id="take-quiz-modal" class="hidden fixed inset-0 bg-[#f0f9ff] z-[100] flex flex-col fade-in">
+    <div class="bg-gradient-to-r from-kid-yellow to-orange-400 text-white p-5 shadow-md flex justify-between items-center shrink-0">
+      <h3 id="take-quiz-title" class="text-lg sm:text-xl font-black drop-shadow-sm flex items-center gap-2">
+        <i class="fa-solid fa-star"></i> <span></span>
+      </h3>
+      <button onclick="closeModal('take-quiz-modal')" class="bg-white/20 hover:bg-white/40 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm transition text-white">
+        <i class="fa-solid fa-times text-xl"></i>
+      </button>
+    </div>
+    
+    <div class="p-4 md:p-8 overflow-y-auto flex-grow" id="take-quiz-body">
+      <!-- Dynamic questions rendered here -->
+    </div>
+    
+    <div class="p-4 sm:p-6 bg-white border-t-4 border-slate-100 shrink-0">
+      <div class="max-w-4xl mx-auto">
+        <button onclick="submitStudentAnswers()" id="btn-submit-answers" class="w-full bg-kid-green hover:bg-emerald-600 text-white font-black text-xl py-4 rounded-2xl border-b-6 border-emerald-700 shadow-xl transition flex justify-center items-center gap-2">
+          <i class="fa-solid fa-paper-plane"></i> انتهيت! سلم إجاباتي
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Quiz Result Celebration -->
+  <div id="result-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[200] flex items-center justify-center p-4 fade-in">
+    <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-md p-8 text-center relative border-b-8 border-yellow-400" id="result-card">
+      <div id="result-icon-container" class="mx-auto w-24 h-24 rounded-full flex items-center justify-center mb-4 text-5xl shadow-inner border-4 border-white outline outline-4">
+        <!-- Icon injected by JS -->
+      </div>
+      <h2 id="result-msg-title" class="text-3xl font-black mb-2 text-slate-800"></h2>
+      <p id="result-msg-desc" class="text-slate-600 mb-6 text-sm font-bold leading-relaxed"></p>
+      
+      <div class="bg-slate-50 p-5 rounded-2xl mb-6 border border-slate-200">
+        <p class="text-slate-500 font-bold mb-1 text-xs">نقاطك كبطل</p>
+        <div class="text-5xl font-black text-kid-blue" dir="ltr">
+          <span id="result-score"></span> <span class="text-2xl text-slate-400">/</span> <span id="result-total" class="text-3xl"></span>
+        </div>
+      </div>
+      
+      <button onclick="closeModal('result-modal')" class="w-full bg-slate-800 hover:bg-black text-white font-black text-base py-3.5 rounded-2xl transition">
+        العودة للمعسكر
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: Optional AI API Key -->
+  <div id="apiKeyModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[150] flex items-center justify-center p-4 fade-in">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-slate-200">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+          <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 text-sm">إعدادات الذكاء الاصطناعي (اختياري)</h3>
+            <p class="text-[11px] text-slate-400">محرك بلوم المدمج يعمل محلياً دون أي حاجة لـ API</p>
+          </div>
+        </div>
+        <button onclick="closeApiKeyModal()" class="text-slate-400 hover:text-slate-600 text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 mb-6">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">المحرك التعليمي:</label>
+          <select id="apiProvider" class="w-full text-xs font-semibold bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none focus:border-brand-500">
+            <option value="builtin">المحرك التربوي المدمج (تلقائي وسريع ومجاني 100%)</option>
+            <option value="gemini">Google Gemini API</option>
+            <option value="openai">OpenAI ChatGPT API</option>
+          </select>
+        </div>
+
+        <div id="apiKeyFieldContainer" class="hidden">
+          <label class="block text-xs font-bold text-slate-700 mb-1">مفتاح API الخاص بك:</label>
+          <input type="password" id="apiKeyValue" placeholder="AIzaSy..." class="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none focus:border-brand-500 font-mono">
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2">
+        <button onclick="closeApiKeyModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100">إلغاء</button>
+        <button onclick="saveApiSettings()" class="px-5 py-2 rounded-xl text-xs font-bold bg-brand-600 hover:bg-brand-700 text-white shadow-md shadow-brand-500/20">حفظ الإعدادات</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // Firebase Config Fallback to LocalStorage
+    const myFirebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'edu-kids-platform';
+    const firebaseConfig = myFirebaseConfig.apiKey !== "YOUR_API_KEY" ? myFirebaseConfig : (typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null);
+    const isLocalMode = !firebaseConfig;
+
+    let app, db, auth;
+    if (!isLocalMode) {
+      try {
+        app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+      } catch (e) {
+        console.warn("Falling back to local mode:", e);
+      }
+    }
+
+    // Unified State
+    window.appState = {
+      user: null,
+      authTab: 'student',
+      currentTab: 'materials',
+      materials: [],
+      quizzes: [],
+      submissions: [],
+      draftQuestions: [],
+      activeQuiz: null,
+      studentAnswers: {},
+      studentComments: {},
+      // Bloom state
+      extractedRawText: '',
+      lessonTitle: 'تحليل المحتوى التعليمي',
+      generatedQuestions: [],
+      includePrintAnswers: true,
+      batchIndex: 1,
+      bloomSubMode: 'config',
+      apiProvider: 'builtin',
+      apiKey: ''
+    };
+
+    const bloomTaxonomy = {
+      analyze: { label: 'تحليل واستنباط', color: 'bg-amber-100 text-amber-800 border-amber-200', icon: 'fa-chart-pie' },
+      evaluate: { label: 'تقويم ونقد', color: 'bg-pink-100 text-pink-800 border-pink-200', icon: 'fa-scale-balanced' },
+      apply: { label: 'تطبيق ونمذجة', color: 'bg-emerald-100 text-emerald-800 border-emerald-200', icon: 'fa-cubes' },
+      create: { label: 'تركيب وابتكار', color: 'bg-purple-100 text-purple-800 border-purple-200', icon: 'fa-lightbulb' },
+      understand: { label: 'فهم وتكامل', color: 'bg-cyan-100 text-cyan-800 border-cyan-200', icon: 'fa-brain' }
+    };
+
+    const el = (id) => document.getElementById(id);
+
+    // Global Toast Notification
+    window.showToast = (msg, type = 'success') => {
+      const container = el('toast-container');
+      const toast = document.createElement('div');
+      const bg = type === 'success' ? 'bg-kid-green' : (type === 'error' ? 'bg-red-500' : 'bg-brand-600');
+      const icon = type === 'success' ? 'fa-check' : (type === 'error' ? 'fa-triangle-exclamation' : 'fa-circle-info');
+      toast.className = `${bg} text-white px-5 py-3.5 rounded-2xl shadow-xl border-b-4 border-black/20 flex items-center gap-3 fade-in font-bold text-xs sm:text-sm pointer-events-auto`;
+      toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => { 
+        toast.style.opacity = '0'; 
+        setTimeout(() => toast.remove(), 300); 
+      }, 3500);
+    };
+
+    // Modal Helpers
+    window.openModal = (id) => { el(id).classList.remove('hidden'); };
+    window.closeModal = (id) => { 
+      el(id).classList.add('hidden'); 
+      if(id === 'result-modal') stopConfetti();
+    };
+
+    // Tab Switching
+    window.switchTab = (tabId) => {
+      appState.currentTab = tabId;
+      const allTabs = ['materials', 'quizzes', 'bloom', 'bank', 'submissions'];
+      
+      allTabs.forEach(t => {
+        const tabBtn = el(`tab-${t}`);
+        const sec = el(`${t}-section`);
+        if (sec) {
+          if (t === tabId) {
+            sec.classList.remove('hidden');
+            if (tabBtn) {
+              tabBtn.className = "nav-btn px-4 sm:px-5 py-2 font-black rounded-xl text-xs sm:text-sm bg-white text-kid-purple shadow-sm transition border border-white flex items-center gap-2 shrink-0";
+            }
+          } else {
+            sec.classList.add('hidden');
+            if (tabBtn) {
+              tabBtn.className = "nav-btn px-4 sm:px-5 py-2 font-black rounded-xl text-xs sm:text-sm text-white hover:bg-white/20 transition border border-transparent flex items-center gap-2 shrink-0";
+            }
+          }
+        }
+      });
+
+      if (tabId === 'bank') renderPrintView();
+      if (tabId === 'submissions' && appState.user?.role === 'teacher') loadSubmissionsForQuiz();
+    };
+
+    window.toggleBloomSubMode = (mode) => {
+      appState.bloomSubMode = mode;
+      const cfgBtn = el('subtab-config-btn');
+      const intBtn = el('subtab-interactive-btn');
+      const cfgView = el('bloom-config-mode');
+      const intView = el('bloom-interactive-mode');
+
+      if (mode === 'config') {
+        cfgView.classList.remove('hidden');
+        intView.classList.add('hidden');
+        cfgBtn.className = "px-4 py-2 rounded-xl text-xs font-black transition bg-brand-600 text-white shadow-sm flex items-center gap-2";
+        intBtn.className = "px-4 py-2 rounded-xl text-xs font-black transition text-slate-600 hover:bg-slate-100 flex items-center gap-2";
+      } else {
+        cfgView.classList.add('hidden');
+        intView.classList.remove('hidden');
+        intBtn.className = "px-4 py-2 rounded-xl text-xs font-black transition bg-brand-600 text-white shadow-sm flex items-center gap-2";
+        cfgBtn.className = "px-4 py-2 rounded-xl text-xs font-black transition text-slate-600 hover:bg-slate-100 flex items-center gap-2";
+        renderQuestionsView();
+      }
+    };
+
+    // Authentication Handlers
+    window.toggleAuthType = (type) => {
+      appState.authTab = type;
+      const btnS = el('auth-type-student');
+      const btnT = el('auth-type-teacher');
+      const inS = el('student-inputs');
+      const inT = el('teacher-inputs');
+
+      if (type === 'student') {
+        btnS.className = 'flex-1 py-3 rounded-xl font-black text-xs sm:text-sm bg-kid-yellow text-white shadow-md border-b-4 border-yellow-600 transition transform scale-105';
+        btnT.className = 'flex-1 py-3 rounded-xl font-bold text-xs sm:text-sm text-slate-600 hover:bg-slate-200 transition';
+        inS.classList.remove('hidden');
+        inT.classList.add('hidden');
+      } else {
+        btnT.className = 'flex-1 py-3 rounded-xl font-black text-xs sm:text-sm bg-kid-blue text-white shadow-md border-b-4 border-blue-600 transition transform scale-105';
+        btnS.className = 'flex-1 py-3 rounded-xl font-bold text-xs sm:text-sm text-slate-600 hover:bg-slate-200 transition';
+        inT.classList.remove('hidden');
+        inS.classList.add('hidden');
+      }
+    };
+
+    window.handleLogin = (e) => {
+      e.preventDefault();
+      const uid = (isLocalMode || !auth?.currentUser) ? 'user-' + Math.floor(Math.random() * 10000) : auth.currentUser.uid;
+
+      if (appState.authTab === 'student') {
+        const name = el('student-name').value.trim();
+        if (!name) return showToast("نسيت كتابة اسمك يا بطل!", "error");
+        appState.user = { role: 'student', name, uid };
+      } else {
+        const pass = el('teacher-pass').value.trim();
+        if (pass !== '1234') return showToast("الرمز السري غير صحيح (1234)", "error");
+        appState.user = { role: 'teacher', name: 'المعلم الخبير', uid };
+      }
+
+      el('auth-section').classList.add('hidden');
+      el('app-nav').classList.remove('hidden');
+      el('user-info').classList.remove('hidden');
+      el('user-info').classList.add('flex');
+
+      if (appState.user.role === 'teacher') {
+        el('user-badge').innerHTML = '<i class="fa-solid fa-chalkboard-user mr-1 text-amber-300"></i> المعلم الخبير';
+        el('tab-submissions').classList.remove('hidden');
+        el('btn-add-material').classList.remove('hidden');
+        el('btn-add-quiz').classList.remove('hidden');
+      } else {
+        el('user-badge').innerHTML = `<i class="fa-solid fa-mask mr-1 text-yellow-300"></i> البطل: ${appState.user.name}`;
+        el('tab-submissions').classList.add('hidden');
+        el('btn-add-material').classList.add('hidden');
+        el('btn-add-quiz').classList.add('hidden');
+      }
+
+      switchTab('materials');
+      fetchData();
+      showToast(`أهلاً بك يا ${appState.user.name}!`);
+    };
+
+    window.logout = () => {
+      appState.user = null;
+      el('app-nav').classList.add('hidden');
+      el('user-info').classList.add('hidden');
+      el('user-info').classList.remove('flex');
+      el('btn-add-material').classList.add('hidden');
+      el('btn-add-quiz').classList.add('hidden');
+      el('tab-submissions').classList.add('hidden');
+      ['materials', 'quizzes', 'bloom', 'bank', 'submissions'].forEach(s => el(`${s}-section`).classList.add('hidden'));
+      el('auth-section').classList.remove('hidden');
+      el('login-form').reset();
+    };
+
+    // Data Storage (Local Storage + Firestore fallback)
+    const loadLocalData = () => {
+      try {
+        const mats = localStorage.getItem('edu_materials');
+        const qzs = localStorage.getItem('edu_quizzes');
+        const subs = localStorage.getItem('edu_submissions');
+        
+        appState.materials = mats ? JSON.parse(mats) : [
+          { id: 'sample-1', title: 'مقدمة في الثورة الصناعية 🚂', link: 'https://youtube.com', type: 'video', timestamp: Date.now() },
+          { id: 'sample-2', title: 'كتاب الفضاء والنجوم التفاعلي 🪐', link: 'https://google.com', type: 'ibook', timestamp: Date.now() }
+        ];
+
+        appState.quizzes = qzs ? JSON.parse(qzs) : [
+          {
+            id: 'sample-quiz-1',
+            title: 'تحدي المعرفة الأول 🌟',
+            questions: [
+              { qText: 'ما هي عاصمة جمهورية مصر العربية؟', options: ['الإسكندرية', 'القاهرة', 'الجيزة', 'أسوان'], correctIdx: 1 },
+              { qText: 'أي من الكواكب التالية هو الأقرب للشمس؟', options: ['عطارد', 'الزهرة', 'المريخ', 'المشتري'], correctIdx: 0 }
+            ],
+            timestamp: Date.now()
+          }
+        ];
+
+        appState.submissions = subs ? JSON.parse(subs) : [];
+      } catch (e) {
+        console.error("Local data load error", e);
+      }
+    };
+
+    const saveLocalData = () => {
+      try {
+        localStorage.setItem('edu_materials', JSON.stringify(appState.materials));
+        localStorage.setItem('edu_quizzes', JSON.stringify(appState.quizzes));
+        localStorage.setItem('edu_submissions', JSON.stringify(appState.submissions));
+      } catch (e) {}
+    };
+
+    const fetchData = async () => {
+      el('global-loader').classList.remove('hidden');
+      if (isLocalMode || !auth?.currentUser) {
+        loadLocalData();
+      } else {
+        try {
+          const matRef = collection(db, 'artifacts', appId, 'public', 'data', 'edu_kids_materials');
+          const quizRef = collection(db, 'artifacts', appId, 'public', 'data', 'edu_kids_quizzes');
+          const [matSnap, quizSnap] = await Promise.all([getDocs(matRef), getDocs(quizRef)]);
+          appState.materials = matSnap.docs.map(d => ({id: d.id, ...d.data()})).sort((a,b)=> (b.timestamp||0)-(a.timestamp||0));
+          appState.quizzes = quizSnap.docs.map(d => ({id: d.id, ...d.data()})).sort((a,b)=> (b.timestamp||0)-(a.timestamp||0));
+        } catch(e) {
+          loadLocalData();
+        }
+      }
+      renderMaterials();
+      renderQuizzes();
+      if (appState.user?.role === 'teacher') populateReportSelect();
+      el('global-loader').classList.add('hidden');
+    };
+
+    // Render Materials
+    const renderMaterials = () => {
+      const list = el('materials-list');
+      const empty = el('empty-materials');
+      list.innerHTML = '';
+
+      if (appState.materials.length === 0) {
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      appState.materials.forEach(mat => {
+        let icon = 'fa-circle-play', bg = 'bg-blue-100', color = 'text-blue-500', typeName = 'فيديو ممتع';
+        if (mat.type === 'ibook') { icon = 'fa-book-open-reader'; bg = 'bg-green-100'; color = 'text-green-500'; typeName = 'كتاب تفاعلي'; }
+        else if (mat.type === 'pdf') { icon = 'fa-file-pdf'; bg = 'bg-red-100'; color = 'text-red-500'; typeName = 'ملف قراءة (PDF)'; }
+        else if (mat.type === 'ppt') { icon = 'fa-file-powerpoint'; bg = 'bg-orange-100'; color = 'text-orange-500'; typeName = 'عرض شرائح'; }
+
+        list.innerHTML += `
+          <div class="bg-white rounded-3xl shadow-sm border-b-[6px] border-slate-200 hover:border-brand-400 transition p-5 flex flex-col items-center text-center bounce-hover group">
+            <div class="w-16 h-16 ${bg} ${color} rounded-2xl flex items-center justify-center mb-3 text-3xl shadow-inner group-hover:rotate-6 transition-transform">
+              <i class="fa-solid ${icon}"></i>
+            </div>
+            <span class="text-[11px] font-bold bg-slate-100 text-slate-500 px-3 py-0.5 rounded-full mb-2">${typeName}</span>
+            <h3 class="font-black text-slate-800 text-base mb-4 leading-snug">${mat.title}</h3>
+            
+            <div class="mt-auto w-full flex flex-col gap-2">
+              <a href="${mat.link}" target="_blank" rel="noopener noreferrer" class="w-full bg-slate-100 hover:bg-brand-600 hover:text-white text-slate-700 font-black py-2.5 rounded-xl transition text-xs flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> استعراض المحتوى
+              </a>
+              <button onclick="sendMaterialToBloom('${mat.title.replace(/'/g, "\\'")}')" class="w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold py-2 rounded-xl transition text-[11px] flex items-center justify-center gap-1">
+                <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i> توليد أسئلة بلوم لهذا الدرس
+              </button>
+            </div>
+          </div>
+        `;
+      });
+    };
+
+    window.submitMaterial = async (e) => {
+      e.preventDefault();
+      const btn = el('btn-submit-mat');
+      btn.disabled = true; 
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الحفظ...';
+
+      const title = el('mat-title').value;
+      const link = el('mat-link').value;
+      const type = document.querySelector('input[name="mat-type"]:checked').value;
+      const newMat = { title, link, type, teacherId: appState.user.uid, timestamp: Date.now() };
+
+      if (!isLocalMode && auth?.currentUser) {
+        try {
+          const ref = collection(db, 'artifacts', appId, 'public', 'data', 'edu_kids_materials');
+          await addDoc(ref, newMat);
+        } catch(err) {
+          newMat.id = 'mat-' + Date.now();
+          appState.materials.unshift(newMat);
+          saveLocalData();
+        }
+      } else {
+        newMat.id = 'mat-' + Date.now();
+        appState.materials.unshift(newMat);
+        saveLocalData();
+      }
+
+      showToast("تمت إضافة الدرس للمكتبة بنجاح! 🪄");
+      closeModal('add-material-modal');
+      e.target.reset();
+      fetchData();
+      btn.disabled = false; 
+      btn.innerHTML = 'رفع الدرس للمكتبة! ✨';
+    };
+
+    // Render Quizzes
+    const renderQuizzes = () => {
+      const list = el('quizzes-list');
+      const empty = el('empty-quizzes');
+      list.innerHTML = '';
+
+      if (appState.quizzes.length === 0) {
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      appState.quizzes.forEach(quiz => {
+        const qCount = quiz.questions ? quiz.questions.length : 0;
+        let btnHtml = '';
+        if (appState.user?.role === 'student') {
+          btnHtml = `<button onclick="startQuiz('${quiz.id}')" class="mt-4 w-full bg-kid-yellow hover:bg-yellow-400 text-white font-black text-sm sm:text-base py-3 rounded-2xl border-b-4 border-yellow-600 transition flex items-center justify-center gap-1.5"><i class="fa-solid fa-bolt"></i> العب التحدي الآن!</button>`;
+        } else {
+          btnHtml = `<p class="mt-4 text-center text-xs font-bold text-slate-500 bg-slate-100 py-2.5 rounded-xl border border-slate-200">النتائج متاحة في تقارير المعلم</p>`;
+        }
+
+        list.innerHTML += `
+          <div class="kid-card p-6 border-b-8 border-kid-yellow relative overflow-hidden bounce-hover flex flex-col justify-between">
+            <div class="flex gap-4 items-center mb-3">
+              <div class="w-12 h-12 bg-kid-yellow text-white rounded-2xl flex items-center justify-center text-2xl shadow-sm rotate-2 shrink-0">
+                <i class="fa-solid fa-star"></i>
+              </div>
+              <div>
+                <h3 class="font-black text-lg text-slate-800 leading-snug">${quiz.title}</h3>
+                <span class="text-xs text-yellow-700 bg-yellow-50 px-2.5 py-0.5 rounded-full border border-yellow-200 font-bold inline-block mt-1">يحتوي على ${qCount} أسئلة 🎯</span>
+              </div>
+            </div>
+            ${btnHtml}
+          </div>
+        `;
+      });
+    };
+
+    window.addDraftQuestion = () => {
+      const qText = el('draft-q-text').value.trim();
+      const opts = Array.from(document.querySelectorAll('.draft-opt')).map(inp => inp.value.trim());
+      const correctIdx = parseInt(document.querySelector('input[name="draft-correct"]:checked').value);
+      
+      if (!qText || opts.some(o => !o)) return showToast("أكمل كتابة السؤال وجميع الخيارات الأربعة", "error");
+      
+      appState.draftQuestions.push({ qText, options: opts, correctIdx });
+      el('draft-q-text').value = '';
+      document.querySelectorAll('.draft-opt').forEach(inp => inp.value = '');
+      document.querySelector('input[name="draft-correct"][value="0"]').checked = true;
+      renderDraftQuestions();
+      showToast("تم حفظ السؤال في التحدي! 👍");
+    };
+
+    const renderDraftQuestions = () => {
+      el('q-count').innerText = appState.draftQuestions.length;
+      const list = el('questions-list-draft');
+      list.innerHTML = '';
+      appState.draftQuestions.forEach((q, i) => {
+        list.innerHTML += `
+          <div class="p-4 border-2 border-blue-200 rounded-2xl bg-white shadow-sm relative">
+            <button onclick="removeDraftQ(${i})" class="absolute top-3 left-3 w-7 h-7 bg-red-100 text-red-500 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white transition">
+              <i class="fa-solid fa-trash text-xs"></i>
+            </button>
+            <h4 class="font-black text-slate-800 mb-3 text-sm flex items-center gap-2">
+              <span class="bg-kid-blue text-white w-6 h-6 inline-flex items-center justify-center rounded-full text-xs">${i+1}</span>
+              <span>${q.qText}</span>
+            </h4>
+            <div class="grid grid-cols-2 gap-2 text-xs font-bold">
+              ${q.options.map((opt, oIdx) => `
+                <div class="p-2 rounded-lg ${oIdx === q.correctIdx ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 font-black' : 'bg-slate-50 text-slate-700'}">
+                  ${opt} ${oIdx === q.correctIdx ? '✓' : ''}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      });
+    };
+
+    window.removeDraftQ = (idx) => {
+      appState.draftQuestions.splice(idx, 1);
+      renderDraftQuestions();
+    };
+
+    window.submitQuiz = async () => {
+      const title = el('quiz-title').value.trim();
+      if (!title || appState.draftQuestions.length === 0) return showToast("يرجى كتابة اسم التحدي وإضافة سؤال واحد على الأقل", "error");
+
+      const btn = el('btn-submit-quiz');
+      btn.disabled = true; 
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الإطلاق...';
+
+      const newQuiz = { 
+        title, 
+        questions: [...appState.draftQuestions], 
+        teacherId: appState.user.uid, 
+        timestamp: Date.now() 
+      };
+
+      if (!isLocalMode && auth?.currentUser) {
+        try {
+          const ref = collection(db, 'artifacts', appId, 'public', 'data', 'edu_kids_quizzes');
+          await addDoc(ref, newQuiz);
+        } catch(e) {
+          newQuiz.id = 'quiz-' + Date.now();
+          appState.quizzes.unshift(newQuiz);
+          saveLocalData();
+        }
+      } else {
+        newQuiz.id = 'quiz-' + Date.now();
+        appState.quizzes.unshift(newQuiz);
+        saveLocalData();
+      }
+
+      showToast("تم إطلاق التحدي بنجاح! 🚀");
+      closeModal('add-quiz-modal');
+      el('quiz-title').value = '';
+      appState.draftQuestions = [];
+      renderDraftQuestions();
+      fetchData();
+      btn.disabled = false; 
+      btn.innerHTML = 'إطلاق التحدي للأبطال! 🚀';
+    };
+
+    window.startQuiz = (quizId) => {
+      const quiz = appState.quizzes.find(q => q.id === quizId);
+      if (!quiz) return;
+      appState.activeQuiz = quiz;
+      appState.studentAnswers = {};
+      appState.studentComments = {};
+
+      el('take-quiz-title').innerHTML = `<i class="fa-solid fa-star text-yellow-300"></i> ${quiz.title}`;
+      const body = el('take-quiz-body');
+      body.innerHTML = '<div class="max-w-3xl mx-auto space-y-6" id="quiz-questions-container"></div>';
+      const container = el('quiz-questions-container');
+
+      quiz.questions.forEach((q, qIdx) => {
+        let optsHtml = '';
+        q.options.forEach((opt, oIdx) => {
+          optsHtml += `
+            <label class="flex items-center gap-3 p-3.5 border-2 border-slate-200 rounded-2xl cursor-pointer hover:bg-blue-50 transition bg-white group">
+              <input type="radio" name="q_${qIdx}" value="${oIdx}" onchange="recordAnswer(${qIdx}, ${oIdx})" class="w-5 h-5 text-kid-blue accent-kid-blue cursor-pointer">
+              <span class="text-slate-800 font-bold text-sm">${opt}</span>
+            </label>
+          `;
+        });
+
+        container.innerHTML += `
+          <div class="bg-white p-6 rounded-3xl shadow-sm border-2 border-slate-100">
+            <h4 class="font-black text-base sm:text-lg text-slate-800 mb-4 flex items-start gap-3">
+              <span class="bg-kid-blue text-white w-8 h-8 inline-flex items-center justify-center rounded-xl text-sm shrink-0 shadow-sm">${qIdx + 1}</span> 
+              <span>${q.qText}</span>
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">${optsHtml}</div>
+            <div class="pt-3 border-t border-dashed border-slate-200">
+              <input type="text" onchange="recordComment(${qIdx}, this.value)" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-none focus:border-brand-500" placeholder="هل السؤال صعب أو ترغب بترك ملاحظة لمعلمك؟ (اختياري)">
+            </div>
+          </div>
+        `;
+      });
+
+      openModal('take-quiz-modal');
+    };
+
+    window.recordAnswer = (qIdx, optIdx) => { appState.studentAnswers[qIdx] = parseInt(optIdx); };
+    window.recordComment = (qIdx, val) => { if(val.trim()) appState.studentComments[qIdx] = val.trim(); else delete appState.studentComments[qIdx]; };
+
+    window.submitStudentAnswers = async () => {
+      if (!appState.user || !appState.activeQuiz) return;
+      const quiz = appState.activeQuiz;
+      const totalQs = quiz.questions.length;
+
+      if (Object.keys(appState.studentAnswers).length < totalQs) {
+        return showToast("يا بطل! يجب الإجابة على جميع الأسئلة أولاً 🦸‍♂️", "error");
+      }
+
+      const btn = el('btn-submit-answers');
+      btn.disabled = true; 
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التصحيح...';
+
+      let score = 0;
+      const wrongAnswers = [];
+      const commentsToSave = [];
+
+      quiz.questions.forEach((q, idx) => {
+        const studentAns = appState.studentAnswers[idx];
+        if (studentAns === q.correctIdx) {
+          score++;
+        } else {
+          wrongAnswers.push({
+            qText: q.qText,
+            studentAnswer: q.options[studentAns],
+            correctAnswer: q.options[q.correctIdx]
+          });
+        }
+        if (appState.studentComments[idx]) {
+          commentsToSave.push({ qText: q.qText, comment: appState.studentComments[idx] });
+        }
+      });
+
+      const newSub = {
+        quizId: quiz.id,
+        quizTitle: quiz.title,
+        studentId: appState.user.uid,
+        studentName: appState.user.name,
+        score,
+        total: totalQs,
+        wrongAnswers,
+        comments: commentsToSave,
+        timestamp: Date.now()
+      };
+
+      if (!isLocalMode && auth?.currentUser) {
+        try {
+          const ref = collection(db, 'artifacts', appId, 'public', 'data', 'edu_kids_submissions');
+          await addDoc(ref, newSub);
+        } catch(e) {
+          newSub.id = 'sub-' + Date.now();
+          appState.submissions.unshift(newSub);
+          saveLocalData();
+        }
+      } else {
+        newSub.id = 'sub-' + Date.now();
+        appState.submissions.unshift(newSub);
+        saveLocalData();
+      }
+
+      closeModal('take-quiz-modal');
+      showResultScreen(score, totalQs);
+      btn.disabled = false; 
+      btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> انتهيت! سلم إجاباتي';
+    };
+
+    const showResultScreen = (score, total) => {
+      const isFull = score === total;
+      const pct = (score / total) * 100;
+      el('result-score').innerText = score;
+      el('result-total').innerText = total;
+
+      const iconCont = el('result-icon-container');
+      const title = el('result-msg-title');
+      const desc = el('result-msg-desc');
+
+      if (isFull) {
+        iconCont.className = 'mx-auto w-24 h-24 rounded-full flex items-center justify-center mb-4 text-5xl bg-yellow-100 text-yellow-500 border-4 border-yellow-200 outline outline-4 outline-white shadow-inner';
+        iconCont.innerHTML = '<i class="fa-solid fa-trophy"></i>';
+        title.innerText = 'أنت بطل خارق! 🦸‍♂️';
+        desc.innerText = 'لقد حصلت على العلامة الكاملة! المعلم فخور جداً بذكائك.';
+        startConfetti();
+      } else if (pct >= 50) {
+        iconCont.className = 'mx-auto w-24 h-24 rounded-full flex items-center justify-center mb-4 text-5xl bg-blue-100 text-blue-500 border-4 border-blue-200 outline outline-4 outline-white shadow-inner';
+        iconCont.innerHTML = '<i class="fa-solid fa-thumbs-up"></i>';
+        title.innerText = 'عمل رائع يا بطل! 👍';
+        desc.innerText = 'أداء متميز! يمكنك المراجعة مرة أخرى للحصول على الدرجة الكاملة.';
+      } else {
+        iconCont.className = 'mx-auto w-24 h-24 rounded-full flex items-center justify-center mb-4 text-5xl bg-orange-100 text-orange-500 border-4 border-orange-200 outline outline-4 outline-white shadow-inner';
+        iconCont.innerHTML = '<i class="fa-solid fa-book-open"></i>';
+        title.innerText = 'فرصة للتعلم يا بطل 🌟';
+        desc.innerText = 'الأبطال يتعلمون دائماً من المحاولات. راجع الدرس وستتفوق في المرة القادمة!';
+      }
+      openModal('result-modal');
+    };
+
+    const populateReportSelect = () => {
+      const sel = el('report-quiz-select');
+      sel.innerHTML = '<option value="">-- اختر التحدي لعرض النتائج --</option>';
+      appState.quizzes.forEach(q => {
+        sel.innerHTML += `<option value="${q.id}">${q.title}</option>`;
+      });
+    };
+
+    window.loadSubmissionsForQuiz = async () => {
+      if (!appState.user || appState.user.role !== 'teacher') return;
+      const quizId = el('report-quiz-select').value;
+      const list = el('submissions-list');
+      if (!quizId) {
+        list.innerHTML = '<div class="text-center text-slate-400 py-10 font-bold bg-white rounded-2xl border-2 border-dashed border-slate-200 text-sm">اختر تحدياً من القائمة أعلاه لعرض النتائج.</div>';
+        return;
+      }
+
+      list.innerHTML = '<div class="text-center text-kid-blue py-10 font-bold text-sm"><i class="fa-solid fa-spinner fa-spin text-3xl mb-2"></i><br>جاري جلب النتائج...</div>';
+
+      let subs = [];
+      if (!isLocalMode && auth?.currentUser) {
+        try {
+          const ref = collection(db, 'artifacts', appId, 'public', 'data', 'edu_kids_submissions');
+          const snap = await getDocs(ref);
+          subs = snap.docs.map(d => ({id: d.id, ...d.data()}));
+        } catch(e) {
+          subs = [...appState.submissions];
+        }
+      } else {
+        subs = [...appState.submissions];
+      }
+
+      subs = subs.filter(s => s.quizId === quizId).sort((a,b) => (b.timestamp||0) - (a.timestamp||0));
+
+      if (subs.length === 0) {
+        list.innerHTML = '<div class="text-center text-slate-400 py-10 font-bold bg-white rounded-2xl border-2 border-dashed border-slate-200 text-sm">لم يقم أي بطل بحل هذا التحدي حتى الآن.</div>';
+        return;
+      }
+
+      list.innerHTML = '';
+      subs.forEach(sub => {
+        const isFull = sub.score === sub.total;
+        const dateStr = new Date(sub.timestamp).toLocaleString('ar-EG');
+        let wrongHtml = '';
+        if (sub.wrongAnswers && sub.wrongAnswers.length > 0) {
+          wrongHtml = `
+            <div class="mt-3 p-4 bg-red-50 rounded-2xl border border-red-100 text-xs">
+              <h5 class="font-black text-red-700 mb-2">أخطاء تحتاج للمراجعة (${sub.wrongAnswers.length})</h5>
+              <div class="space-y-2">
+                ${sub.wrongAnswers.map(w => `
+                  <div class="bg-white p-3 rounded-xl border border-red-100">
+                    <p class="font-bold text-slate-800">${w.qText}</p>
+                    <p class="text-red-500 line-through">إجابة الطالب: ${w.studentAnswer}</p>
+                    <p class="text-emerald-600 font-black">الصواب: ${w.correctAnswer}</p>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }
+
+        let commentsHtml = '';
+        if (sub.comments && sub.comments.length > 0) {
+          commentsHtml = `
+            <div class="mt-3 p-4 bg-purple-50 rounded-2xl border border-purple-100 text-xs">
+              <h5 class="font-black text-purple-700 mb-2">رسائل واستفسارات البطل:</h5>
+              <div class="space-y-1.5">
+                ${sub.comments.map(c => `
+                  <div class="bg-white p-2.5 rounded-xl border border-purple-100 text-purple-900 font-bold">
+                    <span class="text-slate-400 font-normal">بشأن "${c.qText}":</span> "${c.comment}"
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }
+
+        list.innerHTML += `
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-4 bg-slate-50 flex justify-between items-center cursor-pointer hover:bg-slate-100 transition" onclick="this.nextElementSibling.classList.toggle('hidden')">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full ${isFull ? 'bg-yellow-100 text-yellow-600' : 'bg-blue-100 text-kid-blue'} flex items-center justify-center font-black text-lg">
+                  <i class="fa-solid ${isFull ? 'fa-crown' : 'fa-user'}"></i>
+                </div>
+                <div>
+                  <h4 class="font-black text-sm text-slate-800">${sub.studentName}</h4>
+                  <p class="text-[11px] text-slate-400">${dateStr}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="font-black text-base ${isFull ? 'text-emerald-600' : 'text-slate-700'}">${sub.score} / ${sub.total}</span>
+                <i class="fa-solid fa-chevron-down text-slate-400 text-xs"></i>
+              </div>
+            </div>
+            <div class="p-4 hidden bg-white border-t border-slate-100">
+              ${wrongHtml}
+              ${commentsHtml}
+            </div>
+          </div>
+        `;
+      });
+    };
+
+    const pdfFileInput = el('pdfFileInput');
+    const dropZone = el('dropZone');
+    const extractedTextArea = el('extractedText');
+    const charCountLabel = el('charCountLabel');
+    const uploadIdleState = el('uploadIdleState');
+    const uploadProcessingState = el('uploadProcessingState');
+    const uploadStatusText = el('uploadStatusText');
+    const uploadProgressBar = el('uploadProgressBar');
+
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-brand-500', 'bg-indigo-50/60'); });
+    dropZone.addEventListener('dragleave', (e) => { e.preventDefault(); dropZone.classList.remove('border-brand-500', 'bg-indigo-50/60'); });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-brand-500', 'bg-indigo-50/60');
+      if (e.dataTransfer?.files?.length > 0) handlePdfFile(e.dataTransfer.files[0]);
+    });
+
+    pdfFileInput.addEventListener('change', (e) => {
+      if (e.target.files?.length > 0) handlePdfFile(e.target.files[0]);
+    });
+
+    extractedTextArea.addEventListener('input', (e) => {
+      appState.extractedRawText = e.target.value;
+      updateCharCount();
+    });
+
+    function updateCharCount() {
+      const len = appState.extractedRawText.trim().length;
+      charCountLabel.textContent = `${len.toLocaleString('ar-EG')} حرف مُستخرج`;
+    }
+
+    window.clearTextContent = () => {
+      appState.extractedRawText = '';
+      extractedTextArea.value = '';
+      updateCharCount();
+      showToast('تم مسح النص', 'info');
+    };
+
+    window.pasteFromClipboard = async () => {
+      try {
+        const text = await navigator.clipboard.readText();
+        if (text?.trim().length > 0) {
+          appState.extractedRawText = text.trim();
+          extractedTextArea.value = appState.extractedRawText;
+          appState.lessonTitle = "محتوى منسوخ من الحافظة";
+          el('examTopicName').textContent = `موضوع الدرس: ${appState.lessonTitle}`;
+          updateCharCount();
+          showToast('تم لصق النص بنجاح', 'success');
+        } else {
+          showToast('الحافظة فارغة', 'error');
+        }
+      } catch (err) {
+        showToast('يرجى لصق النص مباشرة في المربع (Ctrl+V)', 'info');
+        extractedTextArea.focus();
+      }
+    };
+
+    window.sendMaterialToBloom = (title) => {
+      switchTab('bloom');
+      toggleBloomSubMode('config');
+      el('extractedText').value = `درس تعليمي: ${title}\nيحتوي هذا الدرس على مجموعة من المفاهيم العلمية والتربوية والتطبيقية التي تستهدف إكساب المتعلم قدرات التحليل والتقويم والتفكير الناقد في سياق المادة الدراسية.`;
+      appState.extractedRawText = el('extractedText').value;
+      appState.lessonTitle = title;
+      el('examTopicName').textContent = `موضوع الدرس: ${title}`;
+      updateCharCount();
+      showToast(`تم تجهيز الدرس "${title}" في بنك بلوم!`, 'success');
+    };
+
+    let pdfWorkerBlobUrl = null;
+    async function configurePdfJsWorker() {
+      if (pdfWorkerBlobUrl) return;
+      try {
+        const workerUrl = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        const response = await fetch(workerUrl);
+        const scriptText = await response.text();
+        const blob = new Blob([scriptText], { type: 'application/javascript' });
+        pdfWorkerBlobUrl = URL.createObjectURL(blob);
+        pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerBlobUrl;
+      } catch (err) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      }
+    }
+
+    async function handlePdfFile(file) {
+      if (!file) return;
+      const fileName = file.name || '';
+      const isPdf = fileName.toLowerCase().endsWith('.pdf') || (file.type && file.type.includes('pdf'));
+      const isText = fileName.toLowerCase().endsWith('.txt') || (file.type && file.type.includes('text/plain'));
+
+      if (isText) {
+        const text = await file.text();
+        appState.extractedRawText = text.trim();
+        extractedTextArea.value = appState.extractedRawText;
+        appState.lessonTitle = fileName.replace(/\.[^/.]+$/, "");
+        el('examTopicName').textContent = `موضوع الدرس: ${appState.lessonTitle}`;
+        updateCharCount();
+        showToast('تم تحميل النص بنجاح!', 'success');
+        pdfFileInput.value = '';
+        return;
+      }
+
+      if (!isPdf) {
+        showToast('يرجى اختيار ملف بصيغة PDF صالحة', 'error');
+        pdfFileInput.value = '';
+        return;
+      }
+
+      uploadIdleState.classList.add('hidden');
+      uploadProcessingState.classList.remove('hidden');
+      uploadProgressBar.style.width = '20%';
+      uploadStatusText.textContent = `جارٍ فتح الملف: ${fileName.slice(0, 30)}...`;
+
+      try {
+        await configurePdfJsWorker();
+        const fileData = await file.arrayBuffer();
+        uploadProgressBar.style.width = '45%';
+        uploadStatusText.textContent = 'جارٍ قراءة النصوص والصفحات...';
+
+        const pdf = await pdfjsLib.getDocument({
+          data: new Uint8Array(fileData),
+          cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
+          cMapPacked: true
+        }).promise;
+
+        let fullText = '';
+        const totalPages = pdf.numPages;
+
+        for (let i = 1; i <= totalPages; i++) {
+          const page = await pdf.getPage(i);
+          const textContent = await page.getTextContent();
+          const pageText = textContent.items.map(item => item.str).join(' ');
+          fullText += pageText + '\n\n';
+          const progressPercent = Math.min(95, Math.round((i / totalPages) * 100));
+          uploadProgressBar.style.width = `${progressPercent}%`;
+          uploadStatusText.textContent = `جارٍ استخراج صفحة ${i} من ${totalPages}...`;
+        }
+
+        uploadProgressBar.style.width = '100%';
+
+        if (fullText.trim().length < 15) {
+          showToast('هذا الملف عبارة عن صور ممسوحة ضوئياً (Scanned). يرجى نسخ النص ولصقه بالمربع.', 'error');
+        } else {
+          appState.extractedRawText = fullText.trim();
+          extractedTextArea.value = appState.extractedRawText;
+          appState.lessonTitle = fileName.replace(/\.[^/.]+$/, "");
+          el('examTopicName').textContent = `موضوع الدرس: ${appState.lessonTitle}`;
+          updateCharCount();
+          showToast(`تم استخراج نصوص ${totalPages} صفحة بنجاح!`, 'success');
+        }
+      } catch (err) {
+        console.error('PDF Error:', err);
+        showToast('تعذر استخراج النصوص تلقائياً؛ يمكنك لصق النص مباشرة في المربع', 'error');
+      } finally {
+        uploadProcessingState.classList.add('hidden');
+        uploadIdleState.classList.remove('hidden');
+        pdfFileInput.value = '';
+      }
+    }
+
+    window.loadSampleLesson = () => {
+      const sampleText = `درس: الثورة الصناعية وأثرها الجغرافي والاقتصادي في تشكيل العالم المعاصر
+انطلقت الثورة الصناعية الأولى في بريطانيا أواخر القرن الثامن عشر، مستفيدة من وفرة الفحم الحجري ومصادر الطاقة البخارية التي ابتكرها جيمس وات. وقد شكّل هذا التحول نقلة نوعية من الاقتصاد الزراعي الحرفي المعتمد على الجهد العضلي إلى اقتصاد صناعي ميكانيكي هائل.
+ترتب على هذا التحول نتائج ديموغرافية وجغرافية واسعة؛ حيث هاجرت أعداد غفيرة من سكان الريف إلى المدن الحضرية مثل مانشستر وليفربول بحثاً عن فرص العمل، مما أدى إلى تضخم سكاني سريع وظهور مشاكل التلوث واكتظاظ الأحياء العمالية.
+اقتصادياً، أحدثت وفرة الإنتاج انخفاضاً حاداً في تكلفة السلع الاستهلاكية وزيادة غير مسبوقة في حجم التجارة الدولية. ومع ذلك، ظهرت حاجة ماسة لمصادر مستمرة للمواد الخام وأسواق خارجية لتصريف الفائض الصناعي، مما دفع القوى الأوروبية نحو التوسع الاستعماري في قارتي إفريقيا وآسيا.
+من الناحية الاجتماعية والطبقية، أفرزت الثورة الصناعية تمايزاً حاداً بين طبقة البرجوازية الرأسمالية (مالكي المصانع ووسائل الإنتاج) وطبقة البروليتاريا (العمال الكادحين الذين عانوا من ساعات عمل طويلة وصلت إلى 16 ساعة يومياً وتدني الأجور وعمالة الأطفال)، وهو ما مهّد فيما بعد لنشوء الحركات النقابية والتشريعات العمالية الحديثة.`;
+
+      appState.extractedRawText = sampleText;
+      extractedTextArea.value = sampleText;
+      appState.lessonTitle = "الثورة الصناعية وآثارها الاقتصادية والجيوسياسية";
+      el('examTopicName').textContent = `موضوع الدرس: ${appState.lessonTitle}`;
+      updateCharCount();
+      showToast('تم تحميل نموذج دراسي عالي التحليل بنجاح', 'success');
+    };
+
+    // Heuristic Bloom Question Synthesizer
+    function synthesizePedagogicalQuestions(rawText, batchNum = 1) {
+      const questions = [];
+      const sentences = rawText.split(/[.\n؛!؟]/).map(s => s.trim()).filter(s => s.length > 25);
+      if (sentences.length === 0) return [];
+
+      const config = {
+        truefalse: { enabled: el('type-truefalse').checked, count: parseInt(el('count-truefalse').value) || 2 },
+        complete: { enabled: el('type-complete').checked, count: parseInt(el('count-complete').value) || 2 },
+        explain: { enabled: el('type-explain').checked, count: parseInt(el('count-explain').value) || 2 },
+        results: { enabled: el('type-results').checked, count: parseInt(el('count-results').value) || 2 },
+        prove: { enabled: el('type-prove').checked, count: parseInt(el('count-prove').value) || 2 },
+        terms: { enabled: el('type-terms').checked, count: parseInt(el('count-terms').value) || 2 },
+        definitions: { enabled: el('type-definitions').checked, count: parseInt(el('count-definitions').value) || 2 },
+      };
+
+      let idCounter = 1;
+
+      // Type 1: صح أم خطأ
+      if (config.truefalse.enabled) {
+        for (let i = 0; i < config.truefalse.count; i++) {
+          const sent = sentences[(i * 3 + batchNum) % sentences.length] || sentences[0];
+          const isTrue = (i % 2 === 0);
+          let statement = sent;
+          let correction = "العبارة صحيحة تماماً وتتسق مع المنطق العلمي وسياق النص.";
+          let rationale = "التحليل: يؤكد النص صحة الفرضية؛ حيث ارتبطت الأسباب بالمسببات بصورة متطابقة.";
+
+          if (!isTrue) {
+            statement = sent.replace(/(أدى إلى|ترتب على|انطلقت|أحدثت|ساهمت|ظهرت)/, "لم تؤدِ إطلاقاً إلى").replace(/(وفرة|زيادة|انخفاض)/, "تراجع وانعدام");
+            correction = "التصويب: العبارة خاطئة؛ فالصواب أن الواقع أثبت عكس ذلك كما ورد في النص الأصلي.";
+            rationale = `التعليل التربوي: الخلل في العبارة يكمن في نفي النتيجة؛ حيث أثبت الدرس (${sent}).`;
+          }
+
+          questions.push({
+            id: idCounter++,
+            typeKey: 'truefalse',
+            typeName: 'ضع علامة (صح) أو (خطأ) مع تصويب الخطأ وعلل إجابتك',
+            bloom: 'evaluate',
+            bloomText: bloomTaxonomy.evaluate.label,
+            bloomColor: bloomTaxonomy.evaluate.color,
+            bloomIcon: bloomTaxonomy.evaluate.icon,
+            prompt: `«${statement}»`,
+            expectedAnswer: isTrue ? "العبارة: (صحيحة ✓)" : "العبارة: (خاطئة ✗)",
+            correctionNote: isTrue ? "لا يوجد تصويب (العبارة دقيقة)." : correction,
+            rationale: rationale,
+            userAnswer: '',
+            isRevealed: false
+          });
+        }
+      }
+
+      // Type 2: أكمل
+      if (config.complete.enabled) {
+        for (let i = 0; i < config.complete.count; i++) {
+          const sent = sentences[(i * 2 + 1 + batchNum) % sentences.length] || sentences[1 % sentences.length];
+          const words = sent.split(' ').filter(w => w.length > 3);
+          const targetWord = words[Math.floor(words.length / 2)] || "العوامل الجوهرية";
+          const maskedPrompt = sent.replace(targetWord, ' (....................) ');
+
+          questions.push({
+            id: idCounter++,
+            typeKey: 'complete',
+            typeName: 'أكمل العبارات الآتية بما يناسبها (فهم وتكامل تركيبي)',
+            bloom: 'understand',
+            bloomText: bloomTaxonomy.understand.label,
+            bloomColor: bloomTaxonomy.understand.color,
+            bloomIcon: bloomTaxonomy.understand.icon,
+            prompt: maskedPrompt,
+            expectedAnswer: `المصطلح أو المفهوم المكمل: [ ${targetWord} ]`,
+            correctionNote: `يقبل أي مصطلح مرادف يؤدي إلى المعنى التكاملي التالي: «${sent}».`,
+            rationale: 'التعليل التربوي: يهدف السؤال لاختبار الربط السياقي وتكامل الفكرة دون الاعتماد على الحفظ الآلي.',
+            userAnswer: '',
+            isRevealed: false
+          });
+        }
+      }
+
+      // Type 3: بم تفسر
+      if (config.explain.enabled) {
+        for (let i = 0; i < config.explain.count; i++) {
+          const sent = sentences[(i * 4 + batchNum) % sentences.length] || sentences[0];
+          questions.push({
+            id: idCounter++,
+            typeKey: 'explain',
+            typeName: 'بم تفسر / علل (استهداف مهارات التحليل والاستنتاج)',
+            bloom: 'analyze',
+            bloomText: bloomTaxonomy.analyze.label,
+            bloomColor: bloomTaxonomy.analyze.color,
+            bloomIcon: bloomTaxonomy.analyze.icon,
+            prompt: `علل: ما هي الأسباب والعوامل الجوهرية التي أدت إلى: «${sent.slice(0, 100)}...»؟`,
+            expectedAnswer: `التحليل السببي: يعود ذلك إلى التفاعل المباشر بين العوامل الموضحة في النص والتي خلقت بيئة مواتية لتشكل هذه الظاهرة.`,
+            correctionNote: 'المحكات: ذكر السبب المباشر وتوضيح الظروف المحفزة.',
+            rationale: 'يقيس السؤال قدرة المتعلم على تفكيك سلاسل العلة والمعلول بدقة استنتاجية.',
+            userAnswer: '',
+            isRevealed: false
+          });
+        }
+      }
+
+      // Type 4: ما النتائج المترتبة
+      if (config.results.enabled) {
+        for (let i = 0; i < config.results.count; i++) {
+          const sent = sentences[(i * 3 + 2 + batchNum) % sentences.length] || sentences[0];
+          questions.push({
+            id: idCounter++,
+            typeKey: 'results',
+            typeName: 'ما النتائج المترتبة على...؟ (تفكير ناقد وربط الآثار)',
+            bloom: 'analyze',
+            bloomText: bloomTaxonomy.analyze.label,
+            bloomColor: bloomTaxonomy.analyze.color,
+            bloomIcon: bloomTaxonomy.analyze.icon,
+            prompt: `ما النتائج المباشرة والآثار اللاحقة المترتبة على: «${sent.slice(0, 95)}...»؟`,
+            expectedAnswer: `النتائج المستخلصة: أدى ذلك إلى تحولات هيكلية ملموسة، مع إحداث آثار تراكمية غيرت المسار المعتاد وفرضت واقعاً تنظيمياً جديداً.`,
+            correctionNote: 'الربط بين الأثر اللحظي والمردود بعيد المدى.',
+            rationale: 'يقيس مهارة التنبؤ والتقييم العقلاني لمآلات الأحداث.',
+            userAnswer: '',
+            isRevealed: false
+          });
+        }
+      }
+
+      // Type 5: دلل
+      if (config.prove.enabled) {
+        for (let i = 0; i < config.prove.count; i++) {
+          const sent = sentences[(i * 2 + batchNum) % sentences.length] || sentences[0];
+          questions.push({
+            id: idCounter++,
+            typeKey: 'prove',
+            typeName: 'دلل تاريخياً / جغرافياً / علمياً على صحة العبارة',
+            bloom: 'apply',
+            bloomText: bloomTaxonomy.apply.label,
+            bloomColor: bloomTaxonomy.apply.color,
+            bloomIcon: bloomTaxonomy.apply.icon,
+            prompt: `دلل بالأدلة والشواهد الواقعية من محتوى الدرس على صحة: «${sent.slice(0, 110)}»`,
+            expectedAnswer: `الدليل والشاهد: الدليل القاطع يكمن في الشواهد الميدانية والوقائع المسجلة التي أثبتت دقة هذه الفرضية وتطابقها التام مع النتائج.`,
+            correctionNote: 'يقبل أي استدلال منطقي أو شواهد مذكورة بالنص.',
+            rationale: 'يقيس الاستدلال بالبراهين قدرة الطالب على نقل الفكرة إلى حيز الإثبات العلمي.',
+            userAnswer: '',
+            isRevealed: false
+          });
+        }
+      }
+
+      // Type 6: اكتب ما تشير إليه العبارة
+      if (config.terms.enabled) {
+        for (let i = 0; i < config.terms.count; i++) {
+          const sent = sentences[(i * 5 + 1 + batchNum) % sentences.length] || sentences[0];
+          questions.push({
+            id: idCounter++,
+            typeKey: 'terms',
+            typeName: 'اكتب ما تشير إليه العبارات الآتية (مفاهيم مركبة وتطبيقات)',
+            bloom: 'create',
+            bloomText: bloomTaxonomy.create.label,
+            bloomColor: bloomTaxonomy.create.color,
+            bloomIcon: bloomTaxonomy.create.icon,
+            prompt: `[عبارة دالة]: «تحول جوهري يعبر عن: ${sent.slice(0, 120)}» فما هو المفهوم المركب المعبر عن ذلك؟`,
+            expectedAnswer: `المفهوم المقصود: [ المفهوم الجوهري المعبر عن القضية المطروحة في الدرس ]`,
+            correctionNote: 'التركيز على الدلالة الاصطلاحية وليس مجرد التسمية الحرفية.',
+            rationale: 'يقيس القدرة على التجريد الذهني وتكثيف سياق سردي كامل في مصطلح علمي محدد.',
+            userAnswer: '',
+            isRevealed: false
+          });
+        }
+      }
+
+      // Type 7: ما المقصود بـ
+      if (config.definitions.enabled) {
+        for (let i = 0; i < config.definitions.count; i++) {
+          const sent = sentences[(i * 3 + batchNum) % sentences.length] || sentences[0];
+          const keywords = sent.split(' ').filter(w => w.length > 5);
+          const concept = keywords[0] ? `«${keywords[0]} ${keywords[1] || ''}»` : 'المفهوم المحوري في الدرس';
+
+          questions.push({
+            id: idCounter++,
+            typeKey: 'definitions',
+            typeName: 'ما المقصود بـ...؟ (صياغة المفاهيم بأسلوب الفهم لا الحفظ)',
+            bloom: 'understand',
+            bloomText: bloomTaxonomy.understand.label,
+            bloomColor: bloomTaxonomy.understand.color,
+            bloomIcon: bloomTaxonomy.understand.icon,
+            prompt: `ما المقصود بـ ${concept} في ضوء ما ورد بالدرس؟ اشرح بأسلوبك التحليلي الخاص مبيناً خصائصه الرئيسية.`,
+            expectedAnswer: `المقصود التفسيري: هو حالة أو منظومة ديناميكية تعبر عن (${sent.slice(0, 130)}...)، وتتميز بالفاعلية والتأثير المتواصل.`,
+            correctionNote: 'الدرجة الكاملة تُمنح للأسلوب الشخصي المستوعب للشروط الفنية.',
+            rationale: 'صياغة المفاهيم باللغة الخاصة للمتعلم هو أعلى مؤشرات الاستيعاب المعرفي.',
+            userAnswer: '',
+            isRevealed: false
+          });
+        }
+      }
+
+      return questions;
+    }
+
+    window.initiateQuestionGeneration = () => {
+      const text = appState.extractedRawText.trim();
+      if (!text || text.length < 40) return showToast('يرجى رفع ملف PDF أو كتابة محتوى دراسي معتبر', 'error');
+
+      showToast('جارٍ تشغيل محرك بلوم وصياغة الأسئلة التحليلية...', 'info');
+      setTimeout(() => {
+        appState.batchIndex = 1;
+        appState.generatedQuestions = synthesizePedagogicalQuestions(text, appState.batchIndex);
+        if (appState.generatedQuestions.length === 0) return showToast('يرجى تحديد نوع واحد على الأقل من الأسئلة', 'error');
+
+        el('bloomCountBadge').textContent = appState.generatedQuestions.length;
+        el('bloomCountBadge').classList.remove('hidden');
+        el('bloomBadgeNav').textContent = appState.generatedQuestions.length;
+        el('bloomBadgeNav').classList.remove('hidden');
+
+        toggleBloomSubMode('interactive');
+        startConfetti();
+        showToast(`تم توليد ${appState.generatedQuestions.length} سؤال تحليلي عالي المستوى!`, 'success');
+      }, 400);
+    };
+
+    window.generateFreshBatch = () => {
+      if (!appState.extractedRawText.trim()) return showToast('لا يوجد محتوى لتوليد دفعة جديدة منه', 'error');
+      appState.batchIndex++;
+      showToast(`جارٍ توليد دفعة جديدة تماماً (الدفعة ${appState.batchIndex})...`, 'info');
+      setTimeout(() => {
+        appState.generatedQuestions = synthesizePedagogicalQuestions(appState.extractedRawText, appState.batchIndex);
+        renderQuestionsView();
+        showToast('تم تحديث بنك الأسئلة بدفعة غير مكررة!', 'success');
+      }, 350);
+    };
+
+    window.convertBloomToHeroChallenge = () => {
+      if (!appState.generatedQuestions || appState.generatedQuestions.length === 0) {
+        return showToast('يرجى توليد أسئلة بلوم أولاً ليتم تحويلها', 'error');
+      }
+
+      const challengeQuestions = appState.generatedQuestions.slice(0, 5).map(q => {
+        return {
+          qText: q.prompt.replace(/[«»]/g, ''),
+          options: [
+            q.expectedAnswer.slice(0, 45),
+            'خيار بديل غير دقيق سياقياً',
+            'افتراض يتناقض مع المقدمات العلمية',
+            'نتيجة لا تتسق مع نواتج التعلم'
+          ],
+          correctIdx: 0
+        };
+      });
+
+      const newQuiz = {
+        id: 'quiz-' + Date.now(),
+        title: `تحدي أبطال: ${appState.lessonTitle.slice(0, 30)}`,
+        questions: challengeQuestions,
+        teacherId: appState.user ? appState.user.uid : 'system',
+        timestamp: Date.now()
+      };
+
+      appState.quizzes.unshift(newQuiz);
+      saveLocalData();
+      renderQuizzes();
+      populateReportSelect();
+      switchTab('quizzes');
+      startConfetti();
+      showToast('تم تحويل الأسئلة بنجاح إلى تحدي في قسم الأبطال! 🏆', 'success');
+    };
+
+    window.renderQuestionsView = () => {
+      const container = el('questionsContainer');
+      const emptyState = el('quizEmptyState');
+      const filter = el('filterTypeSelect').value;
+
+      if (!appState.generatedQuestions || appState.generatedQuestions.length === 0) {
+        container.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      const filtered = filter === 'all' ? appState.generatedQuestions : appState.generatedQuestions.filter(q => q.typeKey === filter);
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="bg-white rounded-2xl p-8 text-center text-slate-500 border border-slate-200 font-bold text-xs sm:text-sm">لا توجد أسئلة تحت هذا التصنيف في الدفعة الحالية.</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map((q, index) => `
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm transition hover:shadow-md relative overflow-hidden" id="q-card-${q.id}">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 rounded-xl bg-brand-50 text-brand-700 flex items-center justify-center text-xs font-black">${index + 1}</span>
+              <span class="text-xs font-black text-slate-800">${q.typeName}</span>
+            </div>
+            <div class="flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold border ${q.bloomColor}">
+              <i class="fa-solid ${q.bloomIcon}"></i>
+              <span>مستوى بلوم: ${q.bloomText}</span>
+            </div>
+          </div>
+
+          <div class="text-slate-900 font-bold text-sm sm:text-base mb-4 leading-relaxed bg-slate-50/70 p-4 rounded-2xl border border-slate-100">
+            ${q.prompt}
+          </div>
+
+          <div class="mb-4">
+            <label class="block text-xs font-bold text-slate-500 mb-1 flex items-center gap-1">
+              <i class="fa-regular fa-pen-to-square text-indigo-500"></i>
+              <span>مساحة التدوين وإجابة الطالب (تفاعلي):</span>
+            </label>
+            <textarea oninput="handleUserAnswerInput(${q.id}, this.value)" rows="2" class="w-full text-xs sm:text-sm p-3.5 rounded-xl border border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none text-slate-800 bg-white" placeholder="اكتب تحليلك وإجابتك بأسلوبك الخاص قبل كشف النموذج الإرشادي...">${q.userAnswer || ''}</textarea>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+            <button onclick="toggleQuestionReveal(${q.id})" class="px-4 py-2 rounded-xl text-xs font-black transition flex items-center gap-2 ${q.isRevealed ? 'bg-slate-100 hover:bg-slate-200 text-slate-700' : 'bg-brand-600 hover:bg-brand-700 text-white shadow-md shadow-brand-500/20'}">
+              <i class="fa-solid ${q.isRevealed ? 'fa-eye-slash' : 'fa-lightbulb'}"></i>
+              <span>${q.isRevealed ? 'إخفاء الإجابة النموذجية' : 'كشف الإجابة والتحليل التربوي'}</span>
+            </button>
+            <span class="text-[11px] text-slate-400 font-bold"><i class="fa-solid fa-graduation-cap text-indigo-400"></i> معايير نواتج التعلم</span>
+          </div>
+
+          <div id="answer-drawer-${q.id}" class="${q.isRevealed ? 'block' : 'hidden'} mt-4 pt-4 border-t-2 border-dashed border-indigo-100 bg-gradient-to-br from-indigo-50/40 via-white to-emerald-50/30 p-4 rounded-2xl fade-in text-xs sm:text-sm">
+            <div class="flex items-center gap-1.5 text-emerald-800 font-black mb-1">
+              <i class="fa-solid fa-circle-check text-emerald-600"></i>
+              <span>الإجابة النموذجية المعتمدة:</span>
+            </div>
+            <p class="text-slate-800 font-semibold mb-2 leading-relaxed">${q.expectedAnswer}</p>
+            ${q.correctionNote ? `<div class="text-xs text-slate-600 mb-2 bg-white/80 p-2.5 rounded-lg border border-slate-200/60"><span class="font-bold text-slate-800">ملاحظات التقييم:</span> ${q.correctionNote}</div>` : ''}
+            <div class="text-[11px] text-indigo-900 bg-indigo-100/50 p-2.5 rounded-xl border border-indigo-200/60 leading-relaxed font-bold">
+              <i class="fa-solid fa-chalkboard-user ml-1 text-indigo-700"></i>
+              <span>توجيه المعلم الخبير:</span> ${q.rationale}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    };
+
+    window.handleUserAnswerInput = (id, text) => {
+      const q = appState.generatedQuestions.find(item => item.id === id);
+      if (q) q.userAnswer = text;
+    };
+
+    window.toggleQuestionReveal = (id) => {
+      const q = appState.generatedQuestions.find(item => item.id === id);
+      if (!q) return;
+      q.isRevealed = !q.isRevealed;
+      renderQuestionsView();
+    };
+
+    window.revealAllAnswers = () => {
+      if (!appState.generatedQuestions.length) return;
+      const allRevealed = appState.generatedQuestions.every(q => q.isRevealed);
+      appState.generatedQuestions.forEach(q => q.isRevealed = !allRevealed);
+      renderQuestionsView();
+      showToast(allRevealed ? 'تم إخفاء جميع الإجابات' : 'تم إظهار جميع الإجابات والتحليلات', 'info');
+    };
+
+    window.toggleAnswerKeyInPrint = () => {
+      appState.includePrintAnswers = !appState.includePrintAnswers;
+      el('printAnswersBtnText').textContent = appState.includePrintAnswers ? "إدراج نموذج الإجابة: نعم" : "إدراج نموذج الإجابة: لا (ورقة أسئلة فقط)";
+      if (appState.includePrintAnswers) {
+        el('printAnswerKeySection').classList.remove('hidden');
+      } else {
+        el('printAnswerKeySection').classList.add('hidden');
+      }
+    };
+
+    function renderPrintView() {
+      const printList = el('printQuestionsList');
+      const printAnswers = el('printAnswersList');
+      if (!appState.generatedQuestions.length) {
+        printList.innerHTML = `<p class="text-center text-slate-400 py-8 text-sm font-bold">لا توجد أسئلة حالية لعرضها في ورقة الطباعة. يرجى توليد الأسئلة من تبويب بنك بلوم أولاً.</p>`;
+        printAnswers.innerHTML = '';
+        return;
+      }
+
+      const grouped = {};
+      appState.generatedQuestions.forEach(q => {
+        if (!grouped[q.typeName]) grouped[q.typeName] = [];
+        grouped[q.typeName].push(q);
+      });
+
+      let questionHtml = '';
+      let groupIndex = 1;
+      for (const [groupName, qArr] of Object.entries(grouped)) {
+        questionHtml += `
+          <div class="mb-6">
+            <h4 class="font-black text-slate-900 text-sm sm:text-base mb-3 pb-1 border-b border-slate-300 flex items-center justify-between">
+              <span>السؤال رقم (${groupIndex}): ${groupName}</span>
+              <span class="text-xs font-normal text-slate-500">درجة التقييم: (${qArr.length * 2} درجات)</span>
+            </h4>
+            <div class="space-y-4 pr-2">
+              ${qArr.map((q, idx) => `
+                <div class="text-xs sm:text-sm leading-relaxed">
+                  <div class="font-bold text-slate-800 mb-1 flex items-start gap-2">
+                    <span class="text-slate-500">${idx + 1}-</span>
+                    <span>${q.prompt}</span>
+                  </div>
+                  <div class="h-10 border-b border-dotted border-slate-400 w-full mb-1"></div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+        groupIndex++;
+      }
+      printList.innerHTML = questionHtml;
+
+      printAnswers.innerHTML = appState.generatedQuestions.map((q, idx) => `
+        <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+          <div class="flex items-center justify-between font-bold text-xs text-slate-700 mb-1">
+            <span>س${idx + 1}: ${q.typeName}</span>
+            <span class="text-[10px] bg-slate-200 px-2 py-0.5 rounded font-black">${q.bloomText}</span>
+          </div>
+          <p class="text-xs font-semibold text-slate-900 mb-1"><span class="text-emerald-700 font-bold">النموذج:</span> ${q.expectedAnswer}</p>
+          <p class="text-[11px] text-slate-500 font-bold"><span class="font-bold">التوجيه:</span> ${q.rationale}</p>
+        </div>
+      `).join('');
+    }
+
+    // Confetti Animation Effect
+    let confettiInterval;
+    let particles = [];
+    const canvas = el('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    const resizeCanvas = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    const startConfetti = () => {
+      particles = [];
+      const colors = ['#fde047', '#3b82f6', '#ec4899', '#10b981', '#a855f7', '#fb923c'];
+      for (let i = 0; i < 150; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          w: Math.random() * 10 + 6,
+          h: Math.random() * 10 + 6,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          speed: Math.random() * 4 + 3,
+          angle: Math.random() * 360,
+          spin: Math.random() * 0.2 - 0.1,
+          shape: Math.random() > 0.5 ? 'rect' : 'circle'
+        });
+      }
+      if (!confettiInterval) confettiInterval = requestAnimationFrame(updateConfetti);
+      setTimeout(stopConfetti, 4000);
+    };
+
+    const stopConfetti = () => {
+      cancelAnimationFrame(confettiInterval);
+      confettiInterval = null;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    };
+
+    const updateConfetti = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p) => {
+        p.y += p.speed;
+        p.angle += p.spin;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.angle);
+        ctx.fillStyle = p.color;
+        if (p.shape === 'rect') ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        else { ctx.beginPath(); ctx.arc(0, 0, p.w / 2, 0, Math.PI * 2); ctx.fill(); }
+        ctx.restore();
+        if (p.y > canvas.height) { p.y = -20; p.x = Math.random() * canvas.width; }
+      });
+      if (confettiInterval) confettiInterval = requestAnimationFrame(updateConfetti);
+    };
+
+    // AI Modal Helpers
+    el('toggleApiKeyModalBtn').addEventListener('click', () => el('apiKeyModal').classList.remove('hidden'));
+    el('apiProvider').addEventListener('change', (e) => {
+      el('apiKeyFieldContainer').classList.toggle('hidden', e.target.value === 'builtin');
+    });
+    window.closeApiKeyModal = () => el('apiKeyModal').classList.add('hidden');
+    window.saveApiSettings = () => {
+      appState.apiProvider = el('apiProvider').value;
+      appState.apiKey = el('apiKeyValue').value.trim();
+      closeApiKeyModal();
+      showToast('تم حفظ إعدادات معالج الذكاء الاصطناعي', 'success');
+    };
+
+    // App Initialization
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        el('global-loader').classList.add('hidden');
+        el('auth-section').classList.remove('hidden');
+      }, 700);
+    });
+  </script>
+</body>
+</html>
